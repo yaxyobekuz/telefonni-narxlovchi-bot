@@ -177,11 +177,11 @@ const send_pricing_message = (user) => {
   const message_text = `
 📱 *${model_name}
 🧠 ${storage_name}
-💥 ${damaged ? damaged : "0%"} 
+💥 ${damaged ? damaged : `${texts.excellent[language]} (0%)`} 
 🔋 ${battery_level_name}
 🌎 ${country_name}
 🎨 ${color_name}
-📦 ${box_and_doc ? texts.yes[language] : texts.no[language]}
+📦 ${box_and_doc ? texts.exists[language] : texts.not_exists[language]}
 💰 ${price - minus}$*
 
 ${texts.subscribe_prompt[language]}
@@ -196,7 +196,7 @@ ${texts.subscribe_prompt[language]}
 🔋 ${battery_level_name}
 🌎 ${country_name}
 🎨 ${color_name}
-📦 ${box_and_doc ? texts.yes[language] : texts.no[language]}
+📦 ${box_and_doc ? texts.exists[language] : texts.not_exists[language]}
 💰 ${price - minus}$**`;
 
   send_message(chat_id, message_text, {
