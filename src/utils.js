@@ -45,16 +45,29 @@ const update_user_state = (user_id, state) => {
 };
 
 const update_user_state_data = (user_id, key = "", data) => {
-  if (!users[user_id]) {
+  const user = users[user_id];
+
+  if (!user) {
     return console.error(
       `Error: User with ID ${user_id} not found. Unable to update state data.`
     );
   }
 
-  const user_state_data = users[user_id].state_data;
+  if (!user.state_data) {
+    user.state_data = {};
+  }
 
-  if (user_state_data) user_state_data[key] = data;
-  else user_state_data = { [key]: data };
+  user.state_data[key] = data;
+};
+
+const get_user_state_data = (user_id) => {
+  const user = users[user_id];
+
+  if (!user) {
+    return console.error(`Error: User with ID ${user_id} not found.`);
+  }
+
+  return user.state_data || {};
 };
 
 const update_user_language = (user_id, language) => {
@@ -129,6 +142,81 @@ const create_user = ({ first_name, username, language_code, id }) => {
   send_language_selection_message(id);
 };
 
+const send_pricing_message = (user) => {
+  const chat_id = user.id;
+  const language = user.language;
+  const state_data = user.state_data;
+  const model = state_data.model;
+
+  // Details
+  const price = model.price;
+  const model_name = model.name;
+  const damaged = state_data.damaged;
+  const color_name = state_data.color.name;
+  const color_minus = state_data.color.minus;
+  const box_and_doc = state_data.box_and_doc;
+  const storage_name = state_data.storage.name;
+  const country_name = state_data.country.name;
+  const country_minus = state_data.country.minus;
+  const storage_minus = state_data.storage.minus;
+  const battery_level_name = state_data.battery_level.name;
+  const battery_level_minus = state_data.battery_level.minus;
+  const damaged_minus = damaged ? model.damaged[damaged] : 0;
+
+  // Calculate price
+  const box_and_doc_minus = box_and_doc ? model.box_and_doc : 0;
+  const minus =
+    color_minus +
+    damaged_minus +
+    storage_minus +
+    country_minus +
+    box_and_doc_minus +
+    battery_level_minus;
+
+  // Message text
+  const message_text = `
+📱 *${model_name}
+🧠 ${storage_name}
+💥 ${damaged ? damaged : "0%"} 
+🔋 ${battery_level_name}
+🌎 ${country_name}
+🎨 ${color_name}
+📦 ${box_and_doc ? texts.yes[language] : texts.no[language]}
+💰 ${price - minus}$*
+
+${texts.subscribe_prompt[language]}
+
+[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+
+  const share_text = `
+
+📱 **${model_name}
+🧠 ${storage_name}
+💥 ${damaged ? damaged : "0%"} 
+🔋 ${battery_level_name}
+🌎 ${country_name}
+🎨 ${color_name}
+📦 ${box_and_doc ? texts.yes[language] : texts.no[language]}
+💰 ${price - minus}$**`;
+
+  send_message(chat_id, message_text, {
+    reply_markup: {
+      resize_keyboard: true,
+      inline_keyboard: keyboards.user.share(language, share_text),
+    },
+    disable_web_page_preview: true,
+  });
+
+  send_message(chat_id, texts.contact_admin[language], {
+    reply_markup: {
+      resize_keyboard: true,
+      keyboard: keyboards.user.home(language),
+    },
+  });
+
+  user.state_data = {};
+};
+
 module.exports = {
   create_user,
   send_message,
@@ -138,6 +226,9 @@ module.exports = {
   check_user_state,
   update_user_state,
   get_user_language,
+  get_user_state_data,
   update_user_language,
+  send_pricing_message,
+  update_user_state_data,
   send_language_selection_message,
 };
