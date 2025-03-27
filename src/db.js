@@ -276,6 +276,7 @@ const languages = {
   uz: { value: "uz", name: "O'zbekcha 🇺🇿" },
   oz: { value: "oz", name: "Узбекча (кирилл) 🇺🇿" },
   ru: { value: "ru", name: "Русский 🇷🇺" },
+  en: { value: "en", name: "English 🇬🇧" },
 };
 
 const mandatory_channels = [

@@ -48,7 +48,7 @@ const keyboards = {
 
       return [
         [formatted_languages[0], formatted_languages[1]],
-        [formatted_languages[2]],
+        [formatted_languages[2], formatted_languages[3]],
       ];
     })(),
     mandatory_channels: (language) => [
