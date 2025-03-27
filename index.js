@@ -33,9 +33,7 @@ bot.on("message", async ({ from: user, text: message, chat, contact }) => {
     !is_awaiting_contact &&
     (check_command("/start", message) || !user_storage)
   ) {
-    if (!user_storage) {
-      return create_user(user);
-    }
+    if (!user_storage) return create_user(user);
 
     if (user_language) {
       if (!user_storage?.contact) {

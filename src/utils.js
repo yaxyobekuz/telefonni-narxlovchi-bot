@@ -168,7 +168,9 @@ const create_user = ({ first_name, username, language_code, id }) => {
   const new_user = { id, username, first_name };
 
   if (languages[language_code]) {
-    return (new_user.language = language_code);
+    new_user.language = language_code;
+    users[id] = new_user; // Create a new user
+    return send_request_contact_message(id, language_code);
   }
 
   users[id] = new_user;
