@@ -3,9 +3,8 @@ const texts = require("./texts");
 const keyboards = require("./keyboards");
 const { users, languages } = require("./db");
 
-const extract_numbers = (text = "") => text?.replace(/\D/g, "");
-
 const format_message = (title, description) => `*${title}*\n\n${description}`;
+const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
 
 const send_message = (chatId, text, options) => {
   bot.sendMessage(chatId, text, { ...options, parse_mode: "Markdown" });
@@ -81,7 +80,13 @@ const update_user_language = (user_id, language) => {
       format_message(
         "Xatolik/Ошибка ❌",
         "Til to'g'ri tanlanmadi! Quyidagi tugmalar orqali tilni qaytadan tanlab ko'ring.\n\nЯзык выбран неправильно! Попробуйте выбрать язык еще раз с помощью кнопок ниже. 👇"
-      )
+      ),
+      {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.languages,
+        },
+      }
     );
   }
 
@@ -110,20 +115,13 @@ const update_user_language = (user_id, language) => {
 };
 
 const send_language_selection_message = (user_id) => {
-  const formatted_languages = Object.keys(languages).map((lang) => {
-    return { text: languages[lang].name };
-  });
-
   send_message(
     user_id,
     "Iltimos tilni tanlang!\n\nПожалуйста, выберите язык! 👇",
     {
       reply_markup: {
-        keyboard: [
-          [formatted_languages[0], formatted_languages[1]],
-          [formatted_languages[2]],
-        ],
         resize_keyboard: true,
+        keyboard: keyboards.user.languages,
       },
     }
   );
@@ -159,7 +157,7 @@ const send_pricing_message = (user) => {
   const country_name = state_data.country.name;
   const country_minus = state_data.country.minus;
   const storage_minus = state_data.storage.minus;
-  const battery_level_name = state_data.battery_level.name;
+  const battery_level_name = state_data.battery_level?.name;
   const battery_level_minus = state_data.battery_level.minus;
   const damaged_minus = damaged ? model.damaged[damaged] : 0;
 
