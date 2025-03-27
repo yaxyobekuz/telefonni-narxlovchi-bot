@@ -1,5 +1,5 @@
 const texts = require("./texts");
-const { devices } = require("./db");
+const { devices, languages } = require("./db");
 
 const get_two_row_keyboards = (language, data) => {
   const keyboards = [];
@@ -33,6 +33,16 @@ const keyboards = {
         { text: texts.change_language[language] },
       ],
     ],
+    languages: (() => {
+      const formatted_languages = Object.keys(languages).map((lang) => ({
+        text: languages[lang].name,
+      }));
+
+      return [
+        [formatted_languages[0], formatted_languages[1]],
+        [formatted_languages[2]],
+      ];
+    })(),
     share: (language, message) => [
       [{ text: texts.share[language], switch_inline_query: message }],
     ],
