@@ -278,4 +278,9 @@ const languages = {
   ru: { value: "ru", name: "Русский 🇷🇺" },
 };
 
-module.exports = { users, languages, devices };
+const mandatory_channels = [
+  { username: "@mol_uzb", chat_id: -1001829398323 },
+  { username: "@frontendtv", chat_id: -1001906193267 },
+];
+
+module.exports = { users, languages, devices, mandatory_channels };

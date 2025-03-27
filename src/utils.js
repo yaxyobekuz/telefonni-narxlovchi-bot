@@ -1,13 +1,32 @@
 const bot = require("./bot");
 const texts = require("./texts");
 const keyboards = require("./keyboards");
-const { users, languages } = require("./db");
+const { users, languages, mandatory_channels } = require("./db");
 
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
 
 const send_message = (chatId, text, options) => {
   bot.sendMessage(chatId, text, { ...options, parse_mode: "Markdown" });
+};
+
+const check_user_membership = async (user_id) => {
+  for (const channel of mandatory_channels) {
+    const status = await bot.getChatMember(channel.chat_id, user_id);
+    if (!status || ["left", "kicked"].includes(status.status)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const send_membership_message = (chat_id, language) => {
+  send_message(chat_id, texts.membership_required[language], {
+    reply_markup: {
+      inline_keyboard: keyboards.user.mandatory_channels(language),
+    },
+  });
 };
 
 const check_command = (command_data, command_text) => {
@@ -243,7 +262,9 @@ module.exports = {
   get_user_state_data,
   update_user_language,
   send_pricing_message,
+  check_user_membership,
   update_user_state_data,
+  send_membership_message,
   send_request_contact_message,
   send_language_selection_message,
 };

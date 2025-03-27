@@ -7,7 +7,9 @@ const {
   update_user_state,
   update_user_language,
   send_pricing_message,
+  check_user_membership,
   update_user_state_data,
+  send_membership_message,
   send_request_contact_message,
   send_language_selection_message,
 } = require("./src/utils");
@@ -100,6 +102,10 @@ bot.on("message", async ({ from: user, text: message, chat, contact }) => {
   if (check_command(texts.help, message) && !user_state) {
     return send_message(chat_id, texts.contact[user_language]);
   }
+
+  // Mandatory membership
+  const is_member = await check_user_membership(chat_id);
+  if (!is_member) return send_membership_message(chat_id, user_language);
 
   // Back
   if (is_command_back && user_state) {

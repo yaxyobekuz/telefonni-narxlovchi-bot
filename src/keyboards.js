@@ -1,5 +1,5 @@
 const texts = require("./texts");
-const { devices, languages } = require("./db");
+const { devices, languages, mandatory_channels } = require("./db");
 
 const get_two_row_keyboards = (language, data) => {
   const keyboards = [];
@@ -51,6 +51,14 @@ const keyboards = {
         [formatted_languages[2]],
       ];
     })(),
+    mandatory_channels: (language) => [
+      ...mandatory_channels.map(({ username }, index) => [
+        {
+          url: `https://t.me/${username.substring(1)}`,
+          text: `${texts.channel[language]} #${index + 1}`,
+        },
+      ]),
+    ],
     share: (language, message) => [
       [{ text: texts.share[language], switch_inline_query: message }],
     ],
