@@ -69,6 +69,17 @@ const get_user_state_data = (user_id) => {
   return user.state_data || {};
 };
 
+const send_request_contact_message = (user_id, language) => {
+  send_message(user_id, texts.request_contact[language], {
+    reply_markup: {
+      resize_keyboard: true,
+      keyboard: keyboards.user.request_contact(language),
+    },
+  });
+
+  update_user_state(user_id, "awaiting_contact");
+};
+
 const update_user_language = (user_id, language) => {
   const languages_name = Object.keys(languages).map(
     (language) => languages[language].name
@@ -94,6 +105,12 @@ const update_user_language = (user_id, language) => {
     (language2) => languages[language2].name === language
   );
 
+  users[user_id].language = new_language; // Update user language
+
+  if (!users[user_id]?.contact) {
+    return send_request_contact_message(user_id, new_language);
+  }
+
   send_message(
     user_id,
     format_message(
@@ -111,7 +128,6 @@ const update_user_language = (user_id, language) => {
   );
 
   update_user_state(user_id); // Clear user state
-  users[user_id].language = new_language; // Update user language
 };
 
 const send_language_selection_message = (user_id) => {
@@ -228,5 +244,6 @@ module.exports = {
   update_user_language,
   send_pricing_message,
   update_user_state_data,
+  send_request_contact_message,
   send_language_selection_message,
 };

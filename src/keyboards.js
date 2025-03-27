@@ -33,6 +33,14 @@ const keyboards = {
         { text: texts.change_language[language] },
       ],
     ],
+    request_contact: (language) => [
+      [
+        {
+          request_contact: true,
+          text: texts.send_contact[language],
+        },
+      ],
+    ],
     languages: (() => {
       const formatted_languages = Object.keys(languages).map((lang) => ({
         text: languages[lang].name,
