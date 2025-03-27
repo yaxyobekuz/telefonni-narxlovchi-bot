@@ -4,12 +4,11 @@ const {
   check_command,
   extract_numbers,
   check_user_state,
-  get_user_language,
   update_user_state,
   update_user_language,
+  send_pricing_message,
   update_user_state_data,
   send_language_selection_message,
-  send_pricing_message,
 } = require("./src/utils");
 const bot = require("./src/bot");
 const texts = require("./src/texts");
@@ -23,13 +22,24 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
   const user_state = user_storage?.state;
   const user_language = user_storage?.language;
   const user_state_data = user_storage?.state_data;
-
-  console.log("😎 ", user_storage);
+  const is_command_back = check_command(texts.back, message);
 
   // Start command
   if (check_command("/start", message) || !user_storage) {
     if (!user_storage) {
       return create_user(user);
+    }
+
+    if (user_language) {
+      send_message(chat_id, texts.greeting[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.home(user_language),
+        },
+      });
+
+      user_storage.state_data = {}; // Clear user state data
+      return update_user_state(chat_id); // Clear user state
     }
   }
 
@@ -40,33 +50,35 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
 
   // Send language selection message
   if (
-    (user_storage && !user_language) ||
-    check_command(texts.change_language, message)
+    !user_state &&
+    ((user_storage && !user_language) ||
+      check_command(texts.change_language, message))
   ) {
     return send_language_selection_message(chat_id);
   }
 
   // Help
-  if (check_command(texts.help, message)) {
-    return send_message(chat_id, texts.contact[get_user_language(chat_id)]);
+  if (check_command(texts.help, message) && !user_state) {
+    return send_message(chat_id, texts.contact[user_language]);
   }
 
   // Back
-  if (check_command(texts.back, message) && user_state) {
-    const step = Number(extract_numbers(String(user_state)));
+  if (is_command_back && user_state) {
+    const step = extract_numbers(String(user_state))[0] - 2;
 
-    if (step === 0) {
-      send_message(chat_id, texts.cancel[get_user_language(chat_id)], {
+    if (step < 0) {
+      send_message(chat_id, texts.cancel[user_language], {
         reply_markup: {
           resize_keyboard: true,
           keyboard: keyboards.user.home(user_language),
         },
       });
 
+      user_storage.state_data = {}; // Clear state data
       return update_user_state(chat_id); // Clear user state
     }
 
-    update_user_state(chat_id, `step_${step - 1}`);
+    update_user_state(chat_id, `pricing_step_${step}`);
   }
 
   // Step 0 (Pricing)
@@ -90,8 +102,27 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
       (device) => devices[device].name === message
     );
 
-    if (!device) {
-      return send_message(chat_id, texts.invalid_device[user_language]);
+    if (!device && !is_command_back) {
+      return send_message(chat_id, texts.invalid_device[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_0(user_language),
+        },
+      });
+    }
+
+    if (is_command_back) {
+      send_message(chat_id, texts.step_1[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_1(
+            user_language,
+            user_state_data.device
+          ),
+        },
+      });
+
+      return update_user_state(chat_id, "pricing_step_2");
     }
 
     send_message(chat_id, texts.step_1[user_language], {
@@ -110,12 +141,30 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
     const device = user_state_data.device;
     const models = devices[device].models;
     const model = models.find((model) => model.name === message);
+    const model_battery_levels = model?.battery_levels;
 
-    if (!model) {
-      return send_message(chat_id, texts.invalid_model[user_language]);
+    if (!model && !is_command_back) {
+      return send_message(chat_id, texts.invalid_model[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_1(user_language, device),
+        },
+      });
     }
 
-    const model_battery_levels = model.battery_levels;
+    if (is_command_back) {
+      send_message(chat_id, texts.step_2[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_2(
+            user_language,
+            user_state_data.model.battery_levels
+          ),
+        },
+      });
+
+      return update_user_state(chat_id, "pricing_step_3");
+    }
 
     send_message(chat_id, texts.step_2[user_language], {
       reply_markup: {
@@ -135,8 +184,17 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
       (battery_level) => battery_level.name === message
     );
 
-    if (!battery_level) {
-      return send_message(chat_id, texts.invalid_battery_level[user_language]);
+    if (!battery_level && !is_command_back) {
+      return send_message(chat_id, texts.invalid_battery_level[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_2(user_language, model.battery_levels),
+        },
+      });
+    }
+
+    if (!is_command_back) {
+      update_user_state_data(chat_id, "battery_level", battery_level);
     }
 
     send_message(chat_id, texts.step_3[user_language], {
@@ -146,7 +204,6 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
       },
     });
 
-    update_user_state_data(chat_id, "battery_level", battery_level);
     return update_user_state(chat_id, "pricing_step_4");
   }
 
@@ -155,10 +212,30 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
     const model = user_state_data.model;
 
     if (
-      !check_command(texts.yes, message) &&
-      !check_command(texts.no, message)
+      !is_command_back &&
+      !check_command(texts.no, message) &&
+      !check_command(texts.yes, message)
     ) {
-      return send_message(chat_id, texts.invalid_box_and_doc[user_language]);
+      return send_message(chat_id, texts.invalid_box_and_doc[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_3(user_language),
+        },
+      });
+    }
+
+    if (is_command_back) {
+      send_message(chat_id, texts.step_4[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_4(
+            user_language,
+            user_state_data.model.colors
+          ),
+        },
+      });
+
+      return update_user_state(chat_id, "pricing_step_5");
     }
 
     send_message(chat_id, texts.step_4[user_language], {
@@ -181,8 +258,27 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
     const model = user_state_data.model;
     const color = model.colors.find((color) => color.name === message);
 
-    if (!color) {
-      return send_message(chat_id, texts.invalid_color[user_language]);
+    if (!color && !is_command_back) {
+      return send_message(chat_id, texts.invalid_color[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_4(user_language, model.colors),
+        },
+      });
+    }
+
+    if (is_command_back) {
+      send_message(chat_id, texts.step_5[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_5(
+            user_language,
+            user_state_data.model.storages
+          ),
+        },
+      });
+
+      return update_user_state(chat_id, "pricing_step_6");
     }
 
     send_message(chat_id, texts.step_5[user_language], {
@@ -201,8 +297,27 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
     const model = user_state_data.model;
     const storage = model.storages.find((storage) => storage.name === message);
 
-    if (!storage) {
-      return send_message(chat_id, texts.invalid_storage[user_language]);
+    if (!storage && !is_command_back) {
+      return send_message(chat_id, texts.invalid_storage[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_5(user_language, model.storages),
+        },
+      });
+    }
+
+    if (is_command_back) {
+      send_message(chat_id, texts.step_6[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_6(
+            user_language,
+            user_state_data.model.countries
+          ),
+        },
+      });
+
+      return update_user_state(chat_id, "pricing_step_7");
     }
 
     send_message(chat_id, texts.step_6[user_language], {
@@ -221,8 +336,27 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
     const model = user_state_data.model;
     const country = model.countries.find((country) => country.name === message);
 
-    if (!country) {
-      return send_message(chat_id, texts.invalid_country[user_language]);
+    if (!country && !is_command_back) {
+      return send_message(chat_id, texts.invalid_country[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_6(user_language, model.countries),
+        },
+      });
+    }
+
+    if (is_command_back) {
+      send_message(chat_id, texts.step_7[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_7(
+            user_language,
+            user_state_data.model.countries
+          ),
+        },
+      });
+
+      return update_user_state(chat_id, "pricing_step_8");
     }
 
     send_message(chat_id, texts.step_7[user_language], {
@@ -238,17 +372,36 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
 
   // Step 8 (Damaged)
   if (check_user_state(chat_id, "pricing_step_8")) {
+    const model = user_state_data.model;
+
     if (
-      !check_command(texts.yes, message) &&
-      !check_command(texts.no, message)
+      !is_command_back &&
+      !check_command(texts.no, message) &&
+      !check_command(texts.yes, message)
     ) {
-      return send_message(chat_id, texts.invalid_damaged[user_language]);
+      return send_message(chat_id, texts.invalid_damaged[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_7(user_language, model.countries),
+        },
+      });
     }
 
-    if (check_command(texts.no, message)) {
+    if (check_command(texts.no, message) && !is_command_back) {
       update_user_state(chat_id);
       update_user_state_data(chat_id, "damaged", false);
       return send_pricing_message(user_storage);
+    }
+
+    if (is_command_back) {
+      send_message(chat_id, texts.step_8[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_8(user_language),
+        },
+      });
+
+      return update_user_state(chat_id, "pricing_step_9");
     }
 
     send_message(chat_id, texts.step_8[user_language], {
@@ -261,10 +414,20 @@ bot.on("message", async ({ from: user, text: message, chat }) => {
     return update_user_state(chat_id, "pricing_step_9");
   }
 
-  // Step 9 (Damaged 2)
+  // Step 9 (Damaged in percentages)
   if (check_user_state(chat_id, "pricing_step_9")) {
-    if (message !== "0-15%" && message !== "15-30%" && message !== "30-50%") {
-      return send_message(chat_id, texts.invalid_damaged[user_language]);
+    if (
+      !is_command_back &&
+      message !== "0-15%" &&
+      message !== "15-30%" &&
+      message !== "30-50%"
+    ) {
+      return send_message(chat_id, texts.invalid_damaged[user_language], {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: keyboards.user.step_8(user_language),
+        },
+      });
     }
 
     update_user_state(chat_id);
