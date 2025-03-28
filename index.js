@@ -14,6 +14,7 @@ const {
   send_language_selection_message,
 } = require("./src/utils");
 const bot = require("./src/bot");
+const express = require("express");
 const texts = require("./src/texts");
 const keyboards = require("./src/keyboards");
 const { users, devices } = require("./src/db");
@@ -477,4 +478,16 @@ bot.on("message", async ({ from: user, text: message, chat, contact }) => {
     update_user_state_data(chat_id, "damaged", message);
     send_pricing_message(user_storage);
   }
+});
+
+// For Uptime Robot
+const port = 8080;
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send('<a href="https://t.me/mackbro_telsale_bot">Open The Bot<a>');
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port http://localhost:${port}`);
 });
