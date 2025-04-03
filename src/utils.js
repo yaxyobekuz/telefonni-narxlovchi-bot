@@ -215,6 +215,89 @@ ${t("subscribe_prompt")}
   update_state_name();
 };
 
+const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
+  if (!user) return;
+
+  const {
+    id: chat_id,
+    language_code,
+    state: {
+      data: {
+        box_docs,
+        device: {
+          deductions: {
+            accessories: { box: box_minus },
+          },
+        },
+        model: { name: model_name },
+        screen: { name: screen_name, price: screen_price },
+        memory: { name: memory_name, price: initial_price },
+        adapter: { name: adapter_name, price: adapter_price },
+        appearance: { name: appearance_name, price: appearance_price },
+        battery_capacity: { name: battery_name, percent: battery_percent },
+      },
+    },
+  } = user;
+
+  const { calculate_percentage } = use_calculate(initial_price);
+
+  // Pricing
+  const battery_price = calculate_percentage(battery_percent);
+  const box_docs_price = check_command(t("yes"), box_docs) ? 0 : box_minus;
+
+  // Calculate minus
+  const minus =
+    screen_price +
+    adapter_price +
+    battery_price +
+    box_docs_price +
+    appearance_price;
+
+  const pricing_amount_message =
+    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
+
+  // Message texts
+  const message_text = `
+📱 *${model_name}
+🧠 ${memory_name}
+✨ ${appearance_name}
+📺 ${screen_name}
+🔋 ${battery_name}
+📦 ${box_docs}
+🖲 ${adapter_name}
+💰 ${pricing_amount_message}*
+
+${t("subscribe_prompt")}
+
+[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+
+  const share_text = `
+
+📱 **${model_name}
+🧠 ${memory_name}
+✨ ${appearance_name}
+📺 ${screen_name}
+🔋 ${battery_name}
+📦 ${box_docs}
+🖲 ${adapter_name}
+💰 ${pricing_amount_message}**`;
+
+  // Send message
+  send_message(chat_id, message_text, {
+    reply_markup: {
+      resize_keyboard: true,
+      inline_keyboard: keyboards.user.share(language_code, share_text),
+    },
+    disable_web_page_preview: true,
+  });
+
+  // Back to Home
+  send_message(chat_id, t("contact_admin"), k("home"));
+
+  // Clear user state
+  update_state_name();
+};
+
 module.exports = {
   create_user,
   send_message,
@@ -225,6 +308,7 @@ module.exports = {
   check_user_membership,
   send_membership_message,
   send_phone_pricing_message,
+  send_macbook_pricing_message,
   send_request_contact_message,
   send_language_selection_message,
 };
