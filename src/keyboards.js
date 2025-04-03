@@ -1,7 +1,7 @@
 const texts = require("./texts");
-const { devices, languages, mandatory_channels } = require("./db");
+const { languages, mandatory_channels } = require("./db");
 
-const get_two_row_keyboards = (language, data) => {
+const two_row = (language, data) => {
   const keyboards = [];
   for (let i = 0; i < data.length; i = i + 2) {
     const item_1 = data[i];
@@ -17,7 +17,7 @@ const get_two_row_keyboards = (language, data) => {
   return keyboards;
 };
 
-const get_yes_or_no_keyboards = (language) => {
+const yes_or_no = (language) => {
   return [
     [{ text: texts.yes[language] }, { text: texts.no[language] }],
     [{ text: texts.back[language] }],
@@ -26,6 +26,8 @@ const get_yes_or_no_keyboards = (language) => {
 
 const keyboards = {
   user: {
+    two_row,
+    yes_or_no,
     home: (language) => [
       [{ text: texts.pricing[language] }],
       [
@@ -62,23 +64,6 @@ const keyboards = {
     share: (language, message) => [
       [{ text: texts.share[language], switch_inline_query: message }],
     ],
-    step_0: (language) => [
-      ...Object.keys(devices).map((device) => [{ text: devices[device].name }]),
-      [{ text: texts.back[language] }],
-    ],
-    step_1: (language, device) => {
-      const models = devices[device].models;
-      return [
-        ...models.map((model) => [{ text: model.name }]),
-        [{ text: texts.back[language] }],
-      ];
-    },
-    step_2: get_two_row_keyboards,
-    step_3: get_yes_or_no_keyboards,
-    step_4: get_two_row_keyboards,
-    step_5: get_two_row_keyboards,
-    step_6: get_two_row_keyboards,
-    step_7: get_yes_or_no_keyboards,
     step_8: (language) => {
       return [
         [{ text: "0-15%" }, { text: "15-30%" }],
