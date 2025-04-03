@@ -178,10 +178,10 @@ const texts = {
     en: "🧠 Select the storage capacity of the device:",
   },
   device_status: {
-    uz: "⚙️ Qurilma holatini kiriting:",
-    oz: "⚙️ Қурилма ҳолатини киритинг:",
-    ru: "⚙️ Введите состояние устройства:",
-    en: "⚙️ Enter device condition:",
+    uz: "🛠 Qurilma holatini kiriting:",
+    oz: "🛠 Қурилма ҳолатини киритинг:",
+    ru: "🛠 Введите состояние устройства:",
+    en: "🛠 Enter device condition:",
   },
   device_box_docs: {
     uz: "📦 Qurilma qutisi va hujjatlari bormi?",
