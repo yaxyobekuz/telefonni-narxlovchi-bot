@@ -219,6 +219,12 @@ const texts = {
     ru: "🌎 Введите страну производства устройства:",
     en: "🌎 Enter the country of manufacture of the device:",
   },
+  device_adapter: {
+    uz: "🖲 Qurilma adapterining turini kiriting:",
+    oz: "🖲 Қурилма адаптерининг турини киритинг:",
+    ru: "🖲 Введите тип адаптера устройства:",
+    en: "🖲 Enter the type of device adapter:",
+  },
   step_7: {
     uz: "💥 Qurilmaga shikast yetganmi?",
     oz: "💥 Қурилмага шикаст етганми?",

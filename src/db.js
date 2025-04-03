@@ -209,17 +209,17 @@ const devices = [
         { name: "10-100%", price: 100 },
       ],
       accessories: {
-        adapter: [
-          { name: "14+", price: 100 },
-          { name: "0-14", price: 50 },
+        adapters: [
+          { name: "14+ inch", price: 100 },
+          { name: "0-14 inch", price: 50 },
         ],
+        box: 80,
       },
       appearance: [
         { name: "80-100%", price: 50 },
         { name: "60-80%", price: 120 },
-        { name: "0-60%", accepted: false },
+        { name: "0-60%", price: 999999 },
       ],
-      box: 80,
     },
   },
   {
