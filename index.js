@@ -1,13 +1,10 @@
 const {
-  create_user,
   send_message,
   check_command,
   extract_numbers,
   update_user_language,
   check_user_membership,
   send_membership_message,
-  send_phone_pricing_message,
-  send_request_contact_message,
   send_language_selection_message,
 } = require("./src/utils");
 const bot = require("./src/bot");

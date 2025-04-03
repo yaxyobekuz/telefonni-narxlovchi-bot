@@ -106,111 +106,6 @@ const send_language_selection_message = (user_id) => {
   users[user_id].state.name = "language_selection";
 };
 
-const create_user = ({ first_name, username, language_code, id }) => {
-  const new_user = { id, username, first_name };
-
-  if (languages[language_code]) {
-    new_user.language = language_code;
-    users[id] = new_user; // Create a new user
-    return send_request_contact_message(id, language_code);
-  }
-
-  users[id] = new_user;
-  send_language_selection_message(id);
-};
-
-const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
-  if (!user) return;
-
-  const {
-    id: chat_id,
-    language_code,
-    state: {
-      data: {
-        cable,
-        box_docs,
-        device: {
-          deductions: {
-            countries,
-            accessories: { box: box_minus, cable: cable_minus },
-          },
-        },
-        model: { name: model_name },
-        country: { name: country_name },
-        memory: { name: memory_name, price: initial_price },
-        screen: { name: screen_name, percent: screen_percent },
-        appearance: { name: appearance_name, percent: appearance_percent },
-        battery_capacity: { name: battery_name, percent: battery_percent },
-      },
-    },
-  } = user;
-
-  const { calculate_percentage } = use_calculate(initial_price);
-
-  // Pricing
-  const screen_price = calculate_percentage(screen_percent);
-  const battery_price = calculate_percentage(battery_percent);
-  const appearance_price = calculate_percentage(appearance_percent);
-  const cable_price = check_command(t("yes"), cable) ? 0 : cable_minus;
-  const box_docs_price = check_command(t("yes"), box_docs) ? 0 : box_minus;
-  const country_price = check_command(countries[0].name, country_name) ? 0 : 50;
-
-  // Calculate minus
-  const minus =
-    cable_price +
-    screen_price +
-    battery_price +
-    country_price +
-    box_docs_price +
-    appearance_price;
-
-  const pricing_amount_message =
-    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
-
-  // Message texts
-  const message_text = `
-📱 *${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-📺 ${screen_name}
-🔋 ${battery_name}
-🌎 ${country_name}
-📦 ${box_docs}
-🔌 ${cable}
-💰 ${pricing_amount_message}*
-
-${t("subscribe_prompt")}
-
-[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
-
-  const share_text = `
-
-📱 **${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-📺 ${screen_name}
-🔋 ${battery_name}
-🌎 ${country_name}
-📦 ${box_docs}
-🔌 ${cable}
-💰 ${pricing_amount_message}**`;
-
-  // Send message
-  send_message(chat_id, message_text, {
-    reply_markup: {
-      resize_keyboard: true,
-      inline_keyboard: keyboards.user.share(language_code, share_text),
-    },
-    disable_web_page_preview: true,
-  });
-
-  // Back to Home
-  send_message(chat_id, t("contact_admin"), k("home"));
-
-  // Clear user state
-  update_state_name();
-};
-
 const send_ipad_pricing_message = ({ k, t, user, update_state_name }) => {
   if (!user) return;
 
@@ -510,7 +405,6 @@ ${t("subscribe_prompt")}
 };
 
 module.exports = {
-  create_user,
   send_message,
   check_command,
   format_message,
@@ -519,7 +413,6 @@ module.exports = {
   check_user_membership,
   send_membership_message,
   send_ipad_pricing_message,
-  send_phone_pricing_message,
   send_iwatch_pricing_message,
   send_macbook_pricing_message,
   send_request_contact_message,
