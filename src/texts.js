@@ -219,6 +219,24 @@ const texts = {
     ru: "🌎 Введите страну производства устройства:",
     en: "🌎 Enter the country of manufacture of the device:",
   },
+  device_strap: {
+    uz: "⛓️ Qurilma tasmasi bormi?",
+    oz: "⛓️ Қурилма тасмаси борми?",
+    ru: "⛓️ Есть ли ремешок у устройства?",
+    en: "⛓️ Does the device have a strap?",
+  },
+  device_charger: {
+    uz: "⚡️ Qurilma quvvatlovchisi bormi?",
+    oz: "⚡️ Қурилма қувватловчиси борми?",
+    ru: "⚡️ Есть ли зарядное устройство у устройства?",
+    en: "⚡️ Does the device have a charger?",
+  },
+  device_size: {
+    uz: "📏 Qurilma o'lchamini kiriting:",
+    oz: "📏 Қурилма ўлчамини киритинг:",
+    ru: "📏 Введите размер устройства:",
+    en: "📏 Enter the device size:",
+  },
   device_adapter: {
     uz: "🖲 Qurilma adapterining turini kiriting:",
     oz: "🖲 Қурилма адаптерининг турини киритинг:",

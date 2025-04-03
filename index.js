@@ -124,6 +124,10 @@ bot.on("message", ({ from, text: message, chat, contact }) => {
       );
     }
 
+    if (check_command("iWatch", device.name)) {
+      return send_message(chat_id, t("device_size"), k("two_row", model.sizes));
+    }
+
     return send_message(
       chat_id,
       t("device_memory"),

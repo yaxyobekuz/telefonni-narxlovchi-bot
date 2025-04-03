@@ -330,7 +330,7 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-📱 *${model_name}
+💻 *${model_name}
 🧠 ${memory_name}
 ✨ ${appearance_name}
 📺 ${screen_name}
@@ -345,13 +345,90 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-📱 **${model_name}
+💻 **${model_name}
 🧠 ${memory_name}
 ✨ ${appearance_name}
 📺 ${screen_name}
 🔋 ${battery_name}
 📦 ${box_docs}
 🖲 ${adapter_name}
+💰 ${pricing_amount_message}**`;
+
+  // Send message
+  send_message(chat_id, message_text, {
+    reply_markup: {
+      resize_keyboard: true,
+      inline_keyboard: keyboards.user.share(language_code, share_text),
+    },
+    disable_web_page_preview: true,
+  });
+
+  // Back to Home
+  send_message(chat_id, t("contact_admin"), k("home"));
+
+  // Clear user state
+  update_state_name();
+};
+
+const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
+  if (!user) return;
+
+  const {
+    id: chat_id,
+    language_code,
+    state: {
+      data: {
+        strap,
+        charger,
+        box_docs,
+        device: {
+          deductions: {
+            accessories: {
+              box: box_minus,
+              strap: strap_minus,
+              charger: charger_minus,
+            },
+          },
+        },
+        model: { name: model_name },
+        size: { name: size_name, price: initial_price },
+        battery_capacity: { name: battery_name, percent: battery_percent },
+      },
+    },
+  } = user;
+
+  const { calculate_percentage } = use_calculate(initial_price);
+
+  // Pricing
+  const battery_price = calculate_percentage(battery_percent);
+  const strap_price = check_command(t("yes"), strap) ? 0 : strap_minus;
+  const box_docs_price = check_command(t("yes"), box_docs) ? 0 : box_minus;
+  const charger_price = check_command(t("yes"), charger) ? 0 : charger_minus;
+
+  // Calculate minus
+  const minus = battery_price + box_docs_price + strap_price + charger_price;
+
+  const pricing_amount_message =
+    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
+
+  // Message texts
+  const message_text = `
+⌚️ *${model_name}
+📏 ${size_name}
+🔋 ${battery_name}
+📦 ${box_docs}
+💰 ${pricing_amount_message}*
+
+${t("subscribe_prompt")}
+
+[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+
+  const share_text = `
+
+⌚️ **${model_name}
+📏 ${size_name}
+🔋 ${battery_name}
+📦 ${box_docs}
 💰 ${pricing_amount_message}**`;
 
   // Send message
@@ -381,6 +458,7 @@ module.exports = {
   send_membership_message,
   send_ipad_pricing_message,
   send_phone_pricing_message,
+  send_iwatch_pricing_message,
   send_macbook_pricing_message,
   send_request_contact_message,
   send_language_selection_message,
