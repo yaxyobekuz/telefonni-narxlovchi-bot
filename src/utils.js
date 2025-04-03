@@ -31,6 +31,10 @@ const send_membership_message = (chat_id, language) => {
 };
 
 const check_command = (command_1, command_2) => {
+  if (typeof command_1 !== "string" || typeof command_2 !== "string") {
+    return false;
+  }
+
   return command_1.trim().toLowerCase() === command_2.trim().toLowerCase();
 };
 
@@ -42,15 +46,13 @@ const send_request_contact_message = (user_id, language) => {
     },
   });
 
-  update_state_name(user_id, "awaiting_contact");
+  users[user_id].state.name = "awaiting_contact";
 };
 
 const update_user_language = (user_id, language) => {
-  const languages_name = Object.keys(languages).map(
-    (language) => languages[language].name
-  );
+  const new_language = languages.find(({ name }) => name === language);
 
-  if (!languages_name.includes(language)) {
+  if (!new_language) {
     return send_message(
       user_id,
       format_message(
@@ -66,33 +68,27 @@ const update_user_language = (user_id, language) => {
     );
   }
 
-  const new_language = Object.keys(languages).find(
-    (language2) => languages[language2].name === language
-  );
-
-  users[user_id].language = new_language; // Update user language
+  users[user_id].language_code = new_language.value; // Update user language
 
   if (!users[user_id]?.contact) {
-    return send_request_contact_message(user_id, new_language);
+    return send_request_contact_message(user_id, new_language.value);
   }
 
   send_message(
     user_id,
     format_message(
-      `${texts.success[new_language]} ✅`,
-      texts.language_selection_success(languages[new_language].name)[
-        new_language
-      ]
+      `${texts.success[new_language.value]} ✅`,
+      texts.language_selection_success(new_language.name)[new_language.value]
     ),
     {
       reply_markup: {
         resize_keyboard: true,
-        keyboard: keyboards.user.home(new_language),
+        keyboard: keyboards.user.home(new_language.value),
       },
     }
   );
 
-  update_state_name(user_id); // Clear user state
+  users[user_id].state.name = null;
 };
 
 const send_language_selection_message = (user_id) => {
@@ -107,7 +103,7 @@ const send_language_selection_message = (user_id) => {
     }
   );
 
-  update_state_name(user_id, "language_selection");
+  users[user_id].state.name = "language_selection";
 };
 
 const create_user = ({ first_name, username, language_code, id }) => {

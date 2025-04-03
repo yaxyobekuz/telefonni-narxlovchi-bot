@@ -18,11 +18,16 @@ const { users, devices } = require("./src/db");
 const run_steps = require("./src/steps/index");
 const use_user_state = require("./src/hooks/use_user_state");
 
-bot.on("message", ({ from, text: message, chat, contact }) => {
+bot.on("message", async ({ from, text: message, chat, contact }) => {
   const chat_id = chat.id;
+  if (!users[chat_id]) {
+    users[chat_id] = { ...from, language_code: null };
+  }
+
+  // States
   const user = users[chat_id];
   const user_state = user?.state;
-  const user_language = "uz";
+  const user_language = user?.language_code;
   const user_state_data = user?.state_data;
   const t = (text) => texts[text][user_language];
   const k = (keyboard_name, argument_2) => ({
@@ -32,30 +37,62 @@ bot.on("message", ({ from, text: message, chat, contact }) => {
     },
   });
 
-  if (!user) {
-    users[chat_id] = from;
-
-    // Greeting message
-    send_message(chat_id, t("greeting"), k("home"));
-  }
-
-  //
   const {
     get_state_name,
     get_state_data,
     check_state_name,
-    update_state_name,
     update_state_data,
+    update_state_name,
   } = use_user_state(user);
+
   const state_data = get_state_data();
   const state_name = get_state_name();
   const is_back = check_command(t("back"), message);
+  const is_awaiting_contact = check_state_name("awaiting_contact");
+
+  // Send language selection message
+  if (
+    check_command(t("change_language"), message) ||
+    (user && !user?.language_code && !check_state_name("language_selection"))
+  ) {
+    return send_language_selection_message(chat_id);
+  }
+
+  // Update language
+  if (check_state_name("language_selection")) {
+    return update_user_language(chat_id, message);
+  }
+
+  // Process contact message
+  if (is_awaiting_contact) {
+    if (!contact || contact.user_id !== chat_id) {
+      return send_message(chat_id, t("invalid_contact"), {
+        reply_markup: {
+          resize_keyboard: true,
+          keyboard: [[{ request_contact: true, text: t("send_contact") }]],
+        },
+      });
+    }
+
+    user.contact = contact.phone_number; // Update user contact
+
+    send_message(chat_id, t("registration_successful"), k("home"));
+
+    return update_state_name();
+  }
+
+  // Help
+  if (check_command(t("help"), message) && !user_state?.name) {
+    return send_message(chat_id, t("contact"));
+  }
 
   // Device Pricing Command
-  if (
-    check_command("/start", message) ||
-    check_command(t("pricing"), message)
-  ) {
+  if (check_command(t("pricing"), message)) {
+    // Mandatory membership
+    const is_member = await check_user_membership(chat_id);
+    if (!is_member) return send_membership_message(chat_id, user_language);
+
+    // Send pricing message
     send_message(chat_id, t("select_device"), k("two_row", devices));
     return update_state_name("step_0"); // Update user state name
   }
@@ -94,7 +131,7 @@ bot.on("message", ({ from, text: message, chat, contact }) => {
 
   // Step 1 (Model Selection)
   if (check_state_name("step_1")) {
-    const device = state_data.device;
+    const device = get_state_data().device;
     const model = device.models.find((model) => model.name === message);
 
     if (!model && !is_back) {
@@ -136,19 +173,21 @@ bot.on("message", ({ from, text: message, chat, contact }) => {
   }
 
   // Other steps (2,3,4...)
-  run_steps({
-    t,
-    k,
-    user,
-    chat_id,
-    message,
-    state_data,
-    user_state,
-    get_state_name,
-    get_state_data,
-    user_state_data,
-    check_state_name,
-    update_state_name,
-    update_state_data,
-  });
+  if (extract_numbers(state_name)[0] > 0) {
+    run_steps({
+      t,
+      k,
+      user,
+      chat_id,
+      message,
+      state_data,
+      user_state,
+      get_state_name,
+      get_state_data,
+      user_state_data,
+      check_state_name,
+      update_state_name,
+      update_state_data,
+    });
+  }
 });

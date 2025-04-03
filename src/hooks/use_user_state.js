@@ -1,7 +1,5 @@
 const use_user_state = (user) => {
-  if (!user.state) {
-    user.state = { name: null, data: {} };
-  }
+  if (!user.state) user.state = { name: null, data: {} };
 
   const get_state_name = () => user.state.name;
   const get_state_data = () => user.state.data;
