@@ -284,7 +284,7 @@ const devices = [
       appearance: [
         { name: "80-100%", price: 50 },
         { name: "60-80%", price: 120 },
-        { name: "0-60%", accepted: false },
+        { name: "0-60%", price: 999999 },
       ],
       accessories: {
         box: 80,
