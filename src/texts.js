@@ -70,10 +70,10 @@ const texts = {
     en: "Get help ☎️",
   },
   pricing: {
-    uz: "Telefonni narxlash 💵",
-    oz: "Телефонни нархлаш 💵",
-    ru: "Оценка стоимости телефона 💵",
-    en: "Phone Pricing 💵",
+    uz: "Qurilmani narxlash 💵",
+    oz: "Қурилмани нархлаш 💵",
+    ru: "Оценка стоимости устройства 💵",
+    en: "Device Pricing 💵",
   },
   change_language: {
     uz: "Tilni o'zgartirish 🌐",
@@ -99,13 +99,13 @@ const texts = {
     ru: "*Ошибка* ❌\n\nМодель устройства введена неверно. Пожалуйста, попробуйте снова.",
     en: "*Error* ❌\n\nThe device model is incorrect. Please try again.",
   },
-  invalid_box_and_doc: {
+  invalid_box_docs: {
     uz: "*Xatolik* ❌\n\nNoto'g'ri javob kiritildi. Iltimos, qaytadan urinib ko'ring.",
     oz: "*Хатолик* ❌\n\nНотўғри жавоб киритилди. Илтимос, қайтадан уриниб кўринг.",
     ru: "*Ошибка* ❌\n\nВведен неверный ответ. Пожалуйста, попробуйте снова.",
     en: "*Error* ❌\n\nInvalid response entered. Please try again.",
   },
-  invalid_battery_level: {
+  invalid_battery: {
     uz: "*Xatolik* ❌\n\nNoto'g'ri batareya sig'imi kiritildi. Iltimos, qaytadan urinib ko'ring.",
     oz: "*Хатолик* ❌\n\nНотўғри батарея сиғими киритилди. Илтимос, қайтадан уриниб кўринг.",
     ru: "*Ошибка* ❌\n\nВведена неверная ёмкость батареи. Пожалуйста, попробуйте снова.",
@@ -117,7 +117,13 @@ const texts = {
     ru: "*Ошибка* ❌\n\nВведен неверный цвет. Пожалуйста, попробуйте снова.",
     en: "*Error* ❌\n\nInvalid color entered. Please try again.",
   },
-  invalid_storage: {
+  invalid_value: {
+    uz: "❌ Noto'g'ri qiymat kiritildi. Iltimos, qaytadan urinib ko'ring.",
+    oz: "❌ Нотўғри қиймат киритилди. Илтимос, қайтадан уриниб кўринг.",
+    ru: "❌ Введено неверное значение. Пожалуйста, попробуйте снова.",
+    en: "❌ Invalid value entered. Please try again.",
+  },
+  invalid_memory: {
     uz: "*Xatolik* ❌\n\nNoto'g'ri xotira hajmi kiritildi. Iltimos, qaytadan urinib ko'ring.",
     oz: "*Хатолик* ❌\n\nНотўғри хотира ҳажми киритилди. Илтимос, қайтадан уриниб кўринг.",
     ru: "*Ошибка* ❌\n\nВведен неверный объем памяти. Пожалуйста, попробуйте снова.",
@@ -141,53 +147,77 @@ const texts = {
     ru: "*Ошибка* ❌\n\nВведён неверный номер телефона. Пожалуйста, попробуйте снова.",
     en: "*Error* ❌\n\nInvalid phone number entered. Please try again.",
   },
+  device_screen_scratch: {
+    uz: "📺 Qurilma ekrani qanday darajada tirnalganini kiriting:",
+    oz: "📺 Қурилма экрани қандай даражада тирналганини киритинг:",
+    ru: "📺 Укажите степень царапин на экране устройства:",
+    en: "📺 Enter the level of screen scratches on the device:",
+  },
   cancel: {
     uz: "Amal bekor qilindi ❌",
     oz: "Амал бекор қилинди ❌",
     ru: "Действие отменено ❌",
     en: "Action Cancelled ❌",
   },
-  step_0: {
+  select_device: {
     uz: "📱 Qurilmalardan birini tanlang:",
     oz: "📱 Қурилмалардан бирини танланг:",
     ru: "📱 Выберите одно из устройств:",
     en: "📱 Select one of the devices:",
   },
-  step_1: {
+  device_model: {
     uz: "🧩 Qurilma modelini tanlang:",
     oz: "🧩 Қурилма моделини танланг:",
     ru: "🧩 Выберите модель устройства:",
-    en: "🧩 Select the device model:",
+    en: "🧩 Select device model:",
   },
-  step_2: {
-    uz: "🔋 Qurilma batareyasining sig'imini tanlang:",
-    oz: "🔋 Қурилма батареясининг сиғимини танланг:",
-    ru: "🔋 Выберите ёмкость батареи устройства:",
-    en: "🔋 Select the battery capacity of the device:",
-  },
-  step_3: {
-    uz: "📦 Qurilma qutisi va hujjatlari bormi?",
-    oz: "📦 Қурилма қутиси ва ҳужжатлари борми?",
-    ru: "📦 Есть ли коробка и документы от устройства?",
-    en: "📦 Does the device have a box and documents?",
-  },
-  step_4: {
-    uz: "🎨 Qurilma rangini tanlang:",
-    oz: "🎨 Қурилма рангини танланг:",
-    ru: "🎨 Выберите цвет устройства:",
-    en: "🎨 Select the color of the device:",
-  },
-  step_5: {
+  device_memory: {
     uz: "🧠 Qurilmaning xotira hajmini tanlang:",
     oz: "🧠 Қурилманинг хотира ҳажмини танланг:",
     ru: "🧠 Выберите объем памяти устройства:",
     en: "🧠 Select the storage capacity of the device:",
   },
-  step_6: {
-    uz: "🌎 Qurilma ishlab chiqarilgan davlatni tanlang:",
-    oz: "🌎 Қурилма ишлаб чиқарилган давлатни танланг:",
-    ru: "🌎 Выберите страну производства устройства:",
-    en: "🌎 Select the country of manufacture:",
+  device_status: {
+    uz: "⚙️ Qurilma holatini kiriting:",
+    oz: "⚙️ Қурилма ҳолатини киритинг:",
+    ru: "⚙️ Введите состояние устройства:",
+    en: "⚙️ Enter device condition:",
+  },
+  device_box_docs: {
+    uz: "📦 Qurilma qutisi va hujjatlari bormi?",
+    oz: "📦 Қурилма қутиси ва ҳужжатлари борми?",
+    ru: "📦 Есть ли коробка и документы от устройства?",
+    en: "📦 Does the device have a box and documents?",
+  },
+  device_cable: {
+    uz: "🔌 Qurilma kabeli bormi?",
+    oz: "🔌 Қурилма кабели борми?",
+    ru: "🔌 Есть ли кабель у устройства?",
+    en: "🔌 Does the device have a cable?",
+  },
+  device_appearance: {
+    uz: "✨ Qurilma ko'rinishini kiriting:",
+    oz: "✨ Қурилма кўринишини киритинг:",
+    ru: "✨ Введите внешний вид устройства:",
+    en: "✨ Enter the device appearance:",
+  },
+  device_color: {
+    uz: "🎨 Qurilma rangini tanlang:",
+    oz: "🎨 Қурилма рангини танланг:",
+    ru: "🎨 Выберите цвет устройства:",
+    en: "🎨 Select the color of the device:",
+  },
+  device_battery_capacity: {
+    uz: "🔋 Qurilma batareyasining sig'imini tanlang:",
+    oz: "🔋 Қурилма батареясининг сиғимини танланг:",
+    ru: "🔋 Выберите ёмкость батареи устройства:",
+    en: "🔋 Select the battery capacity of the device:",
+  },
+  device_country: {
+    uz: "🌎 Qurilma ishlab chiqarilgan davlatni kiriting:",
+    oz: "🌎 Қурилма ишлаб чиқарилган давлатни киритинг:",
+    ru: "🌎 Введите страну производства устройства:",
+    en: "🌎 Enter the country of manufacture of the device:",
   },
   step_7: {
     uz: "💥 Qurilmaga shikast yetganmi?",
@@ -212,6 +242,12 @@ const texts = {
     oz: "Йўқ ❌",
     ru: "Нет ❌",
     en: "No ❌",
+  },
+  free: {
+    uz: "Bepul",
+    oz: "Бепул",
+    ru: "Бесплатно",
+    en: "Free",
   },
   subscribe_prompt: {
     uz: "Bizning ijtimoiy tarmoqlarimizga obuna bo'lishni unutmang!",
