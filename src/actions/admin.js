@@ -2,7 +2,7 @@
 const texts = require("../texts");
 
 // DataBase
-const { devices, admins } = require("../db");
+const { devices, admins, mandatory_channels } = require("../db");
 
 // Keyboards
 const keyboards = require("../keyboards");
@@ -173,13 +173,25 @@ const admin_actions = async ({
 
   // Admins List Command
   if (check_command(t("admins"), message) && !user_state?.name) {
-    let admins_list = "*Adminlar 👥*\n\n";
+    ``;
+    let admins_list = `*${t("admins")}*\n`;
 
     Object.values(admins).forEach((admin, index) => {
-      admins_list += `*${index + 1}.* ${admin?.name} \`${admin?.id}\`\n`;
+      admins_list += `\n*${index + 1}.* ${admin?.name} \`${admin?.id}\``;
     });
 
     return send_message(chat_id, admins_list);
+  }
+
+  // Channels List Command
+  if (check_command(t("channels"), message) && !user_state?.name) {
+    let channels_list = `<b>${t("channels")}</b>\n`;
+
+    mandatory_channels.forEach((channel, index) => {
+      channels_list += `\n<b>${index + 1}.</b> ${channel?.username}`;
+    });
+
+    return send_message(chat_id, channels_list, { parse_mode: "HTML" });
   }
 };
 

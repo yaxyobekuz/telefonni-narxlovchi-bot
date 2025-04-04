@@ -17,7 +17,7 @@ const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
 
 const send_message = (chat_id, text, options) => {
-  bot.sendMessage(chat_id, text, { ...options, parse_mode: "Markdown" });
+  bot.sendMessage(chat_id, text, { parse_mode: "Markdown", ...options });
 };
 
 const check_user_membership = async (user_id) => {
