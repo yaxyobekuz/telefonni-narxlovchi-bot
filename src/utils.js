@@ -7,6 +7,9 @@ const texts = require("./texts");
 // Keyboards
 const keyboards = require("./keyboards");
 
+// Env
+const { security_token } = require("../env.config");
+
 // Hooks
 const use_calculate = require("./hooks/use_calculate");
 
@@ -514,7 +517,17 @@ ${t("subscribe_prompt")}
   update_state_name();
 };
 
+const check_auth = (req, res, next) => {
+  const auth_code = req.query.auth;
+
+  if (auth_code !== security_token) {
+    return res.status(401).json({ error: "Noto'g'ri auth kodi" });
+  }
+  next();
+};
+
 module.exports = {
+  check_auth,
   send_message,
   check_command,
   format_message,
