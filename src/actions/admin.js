@@ -1,17 +1,17 @@
-const {
-  send_message,
-  check_command,
-  extract_numbers,
-  update_user_language,
-  check_user_membership,
-  send_membership_message,
-  send_language_selection_message,
-} = require("../utils");
+// Texts
 const texts = require("../texts");
+
+// DataBase
 const { devices } = require("../db");
+
+// Keyboards
 const keyboards = require("../keyboards");
-const run_steps = require("../steps/index");
+
+// Hooks
 const use_user_state = require("../hooks/use_user_state");
+
+// Utils
+const { send_message, check_command } = require("../utils");
 
 const admin_actions = async ({
   user,
@@ -19,8 +19,6 @@ const admin_actions = async ({
   chat: { id: chat_id },
 }) => {
   const user_state = user?.state;
-  const user_language = user?.language_code;
-  const user_state_data = user?.state_data;
   const t = (text) => texts[text]["uz"];
   const k = (keyboard_name, data) => ({
     reply_markup: {
@@ -30,7 +28,6 @@ const admin_actions = async ({
   });
 
   const {
-    get_state_name,
     get_state_data,
     check_state_name,
     update_state_data,
@@ -38,7 +35,6 @@ const admin_actions = async ({
   } = use_user_state(user);
 
   const state_data = get_state_data();
-  const state_name = get_state_name();
   const is_back = check_command(t("back"), message);
 
   if (check_command("/start", message) && !user_state?.name) {

@@ -1,8 +1,17 @@
+// Bot
 const bot = require("./bot");
+
+// Texts
 const texts = require("./texts");
+
+// Keyboards
 const keyboards = require("./keyboards");
-const { users, languages, mandatory_channels } = require("./db");
+
+// Hooks
 const use_calculate = require("./hooks/use_calculate");
+
+// DataBase
+const { users, languages, mandatory_channels } = require("./db");
 
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
@@ -151,7 +160,9 @@ const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
     appearance_price;
 
   const pricing_amount_message =
-    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
+    initial_price - minus > 0
+      ? `${(initial_price - minus)?.toFixed(1)}$`
+      : t("free");
 
   // Message texts
   const message_text = `
@@ -229,7 +240,9 @@ const send_ipad_pricing_message = ({ k, t, user, update_state_name }) => {
   const minus = battery_price + box_docs_price + appearance_price;
 
   const pricing_amount_message =
-    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
+    initial_price - minus > 0
+      ? `${(initial_price - minus)?.toFixed(1)}$`
+      : t("free");
 
   // Message texts
   const message_text = `
@@ -308,7 +321,9 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
     appearance_price;
 
   const pricing_amount_message =
-    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
+    initial_price - minus > 0
+      ? `${(initial_price - minus)?.toFixed(1)}$`
+      : t("free");
 
   // Message texts
   const message_text = `
@@ -391,7 +406,9 @@ const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
   const minus = battery_price + box_docs_price + strap_price + charger_price;
 
   const pricing_amount_message =
-    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
+    initial_price - minus > 0
+      ? `${(initial_price - minus)?.toFixed(1)}$`
+      : t("free");
 
   // Message texts
   const message_text = `
@@ -459,7 +476,9 @@ const send_airpods_pricing_message = ({ k, t, user, update_state_name }) => {
   const minus = box_docs_price + status_price;
 
   const pricing_amount_message =
-    initial_price - minus > 0 ? `${initial_price - minus}$` : t("free");
+    initial_price - minus > 0
+      ? `${(initial_price - minus)?.toFixed(1)}$`
+      : t("free");
 
   // Message texts
   const message_text = `
