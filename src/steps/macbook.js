@@ -35,26 +35,6 @@ const macbook_steps = ({
     update_state_name("step_3"); // Update user state name
     update_state_data("memory", memory); // Update user state data
 
-    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-  }
-
-  // Step 3 (Box Docs Selection)
-  if (check_state_name("step_3")) {
-    if (
-      !is_back &&
-      !check_command(t("no"), message) &&
-      !check_command(t("yes"), message)
-    ) {
-      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
-    }
-
-    if (is_back) {
-      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-    }
-
-    update_state_name("step_4"); // Update user state name
-    update_state_data("box_docs", message); // Update user state data
-
     return send_message(
       chat_id,
       t("device_battery_capacity"),
@@ -62,8 +42,8 @@ const macbook_steps = ({
     );
   }
 
-  // Step 4 (Battery Capacity Selection)
-  if (check_state_name("step_4")) {
+  // Step 3 (Battery Capacity Selection)
+  if (check_state_name("step_3")) {
     const battery_capacities = device.deductions.battery;
     const battery = battery_capacities.find(
       (battery) => battery.name === message
@@ -85,7 +65,7 @@ const macbook_steps = ({
       );
     }
 
-    update_state_name("step_5"); // Update user state name
+    update_state_name("step_4"); // Update user state name
     update_state_data("battery_capacity", battery); // Update user state data
 
     return send_message(
@@ -95,8 +75,8 @@ const macbook_steps = ({
     );
   }
 
-  // Step 5 (Screen Scratch Selection)
-  if (check_state_name("step_5")) {
+  // Step 4 (Screen Scratch Selection)
+  if (check_state_name("step_4")) {
     const screen_scratches = device.deductions.screen;
     const screen = screen_scratches.find((screen) => screen.name === message);
 
@@ -116,8 +96,31 @@ const macbook_steps = ({
       );
     }
 
-    update_state_name("step_6"); // Update user state name
+    update_state_name("step_5"); // Update user state name
     update_state_data("screen", screen); // Update user state data
+
+    return send_message(
+      chat_id,
+      t("device_adapter"),
+      k("two_row", device.deductions.accessories.adapters)
+    );
+  }
+
+  // Step 5 (Adapter Selection)
+  if (check_state_name("step_5")) {
+    const adapters = device.deductions.accessories.adapters;
+    const adapter = adapters.find((adapter) => adapter.name === message);
+
+    if (!is_back && !adapter) {
+      return send_message(chat_id, t("invalid_value"), k("two_row", adapters));
+    }
+
+    if (is_back) {
+      return send_message(chat_id, t("device_adapter"), k("two_row", adapters));
+    }
+
+    update_state_name("step_6"); // Update user state name
+    update_state_data("adapter", adapter); // Update user state data
 
     return send_message(
       chat_id,
@@ -152,28 +155,24 @@ const macbook_steps = ({
     update_state_name("step_7"); // Update user state name
     update_state_data("appearance", appearance); // Update user state data
 
-    return send_message(
-      chat_id,
-      t("device_adapter"),
-      k("two_row", device.deductions.accessories.adapters)
-    );
+    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
   }
 
-  // Step 7 (Adapter Selection)
+  // Step 7 (Box Docs Selection)
   if (check_state_name("step_7")) {
-    const adapters = device.deductions.accessories.adapters;
-    const adapter = adapters.find((adapter) => adapter.name === message);
-
-    if (!is_back && !adapter) {
-      return send_message(chat_id, t("invalid_value"), k("two_row", adapters));
+    if (
+      !is_back &&
+      !check_command(t("no"), message) &&
+      !check_command(t("yes"), message)
+    ) {
+      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
     }
 
     if (is_back) {
-      return send_message(chat_id, t("device_adapter"), k("two_row", adapters));
+      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
     }
 
-    // Update user state data
-    update_state_data("adapter", adapter);
+    update_state_data("box_docs", message); // Update user state data
 
     // Send pricing message
     send_macbook_pricing_message({ k, t, user, update_state_name });
