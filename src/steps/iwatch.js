@@ -31,26 +31,6 @@ const iwatch_steps = ({
     update_state_name("step_3"); // Update user state name
     update_state_data("size", size); // Update user state data
 
-    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-  }
-
-  // Step 3 (Box Docs Selection)
-  if (check_state_name("step_3")) {
-    if (
-      !is_back &&
-      !check_command(t("no"), message) &&
-      !check_command(t("yes"), message)
-    ) {
-      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
-    }
-
-    if (is_back) {
-      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-    }
-
-    update_state_name("step_4"); // Update user state name
-    update_state_data("box_docs", message); // Update user state data
-
     return send_message(
       chat_id,
       t("device_battery_capacity"),
@@ -58,8 +38,8 @@ const iwatch_steps = ({
     );
   }
 
-  // Step 4 (Battery Capacity Selection)
-  if (check_state_name("step_4")) {
+  // Step 3 (Battery Capacity Selection)
+  if (check_state_name("step_3")) {
     const battery_capacities = device.deductions.battery;
     const battery = battery_capacities.find(
       (battery) => battery.name === message
@@ -81,8 +61,28 @@ const iwatch_steps = ({
       );
     }
 
-    update_state_name("step_5"); // Update user state name
+    update_state_name("step_4"); // Update user state name
     update_state_data("battery_capacity", battery); // Update user state data
+
+    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
+  }
+
+  // Step 4 (Box Docs Selection)
+  if (check_state_name("step_4")) {
+    if (
+      !is_back &&
+      !check_command(t("no"), message) &&
+      !check_command(t("yes"), message)
+    ) {
+      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
+    }
+
+    if (is_back) {
+      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
+    }
+
+    update_state_name("step_5"); // Update user state name
+    update_state_data("box_docs", message); // Update user state data
 
     return send_message(chat_id, t("device_strap"), k("yes_or_no"));
   }
