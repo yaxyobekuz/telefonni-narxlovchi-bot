@@ -35,26 +35,6 @@ const ipad_steps = ({
     update_state_name("step_3"); // Update user state name
     update_state_data("memory", memory); // Update user state data
 
-    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-  }
-
-  // Step 3 (Box Docs Selection)
-  if (check_state_name("step_3")) {
-    if (
-      !is_back &&
-      !check_command(t("no"), message) &&
-      !check_command(t("yes"), message)
-    ) {
-      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
-    }
-
-    if (is_back) {
-      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-    }
-
-    update_state_name("step_4"); // Update user state name
-    update_state_data("box_docs", message); // Update user state data
-
     return send_message(
       chat_id,
       t("device_battery_capacity"),
@@ -62,8 +42,8 @@ const ipad_steps = ({
     );
   }
 
-  // Step 4 (Battery Capacity Selection)
-  if (check_state_name("step_4")) {
+  // Step 3 (Battery Capacity Selection)
+  if (check_state_name("step_3")) {
     const battery_capacities = device.deductions.battery;
     const battery = battery_capacities.find(
       (battery) => battery.name === message
@@ -85,7 +65,7 @@ const ipad_steps = ({
       );
     }
 
-    update_state_name("step_5"); // Update user state name
+    update_state_name("step_4"); // Update user state name
     update_state_data("battery_capacity", battery); // Update user state data
 
     return send_message(
@@ -95,8 +75,8 @@ const ipad_steps = ({
     );
   }
 
-  // Step 6 (Appearance Selection)
-  if (check_state_name("step_5")) {
+  // Step 4 (Appearance Selection)
+  if (check_state_name("step_4")) {
     const appearances = device.deductions.appearance;
     const appearance = appearances.find(
       (appearance) => appearance.name === message
@@ -118,8 +98,28 @@ const ipad_steps = ({
       );
     }
 
+    update_state_name("step_5"); // Update user state name
+    update_state_data("appearance", appearance); // Update user state data
+
+    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
+  }
+
+  // Step 5 (Box Docs Selection)
+  if (check_state_name("step_5")) {
+    if (
+      !is_back &&
+      !check_command(t("no"), message) &&
+      !check_command(t("yes"), message)
+    ) {
+      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
+    }
+
+    if (is_back) {
+      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
+    }
+
     // Update user state data
-    update_state_data("appearance", appearance);
+    update_state_data("box_docs", message);
 
     // Send pricing message
     send_ipad_pricing_message({ k, t, user, update_state_name });
