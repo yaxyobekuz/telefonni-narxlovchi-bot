@@ -1,4 +1,14 @@
-const users = {};
+const users = {
+  0: { id: 0, name: "1#" },
+  1: { id: 1, name: "2#" },
+  2: { id: 2, name: "3#" },
+  4: { id: 4, name: "4#" },
+  5: { id: 5, name: "5#" },
+  6: { id: 6, name: "6#" },
+  7: { id: 7, name: "7#" },
+  8: { id: 8, name: "8#" },
+  9: { id: 9, name: "9#" },
+};
 const admins = {
   298444246: { id: 298444246, name: "Admin #1", status: "owner" },
 };
