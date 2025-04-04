@@ -1,4 +1,4 @@
-const users = { 0: { id: 0, status: "owner" } };
+const users = { 298444246: { id: 298444246, status: "owner" } };
 
 const devices = [
   {
@@ -228,45 +228,45 @@ const devices = [
       {
         name: "iPad 9",
         storages: [
-          { name: "64gb, sim", price: 250 },
-          { name: "64gb, wifi", price: 150 },
-          { name: "256gb, sim", price: 450 },
-          { name: "256gb, wifi", price: 250 },
+          { name: "64gb sim", price: 250 },
+          { name: "64gb wifi", price: 150 },
+          { name: "256gb sim", price: 450 },
+          { name: "256gb wifi", price: 250 },
         ],
       },
       {
         name: "iPad 10",
         storages: [
-          { name: "64gb, sim", price: 300 },
-          { name: "64gb, wifi", price: 150 },
-          { name: "256gb, sim", price: 500 },
-          { name: "256gb, wifi", price: 300 },
+          { name: "64gb sim", price: 300 },
+          { name: "64gb wifi", price: 150 },
+          { name: "256gb sim", price: 500 },
+          { name: "256gb wifi", price: 300 },
         ],
       },
       {
         name: "iPad Air 5",
         storages: [
-          { name: "64gb, sim", price: 400 },
-          { name: "64gb, wifi", price: 250 },
-          { name: "256gb, wifi", price: 400 },
+          { name: "64gb sim", price: 400 },
+          { name: "64gb wifi", price: 250 },
+          { name: "256gb wifi", price: 400 },
         ],
       },
       {
         name: "iPad Mini 6",
         storages: [
-          { name: "64gb, sim", price: 300 },
-          { name: "64gb, wifi", price: 200 },
-          { name: "256gb, sim", price: 400 },
-          { name: "256gb, wifi", price: 300 },
+          { name: "64gb sim", price: 300 },
+          { name: "64gb wifi", price: 200 },
+          { name: "256gb sim", price: 400 },
+          { name: "256gb wifi", price: 300 },
         ],
       },
       {
         name: "iPad Pro 11 M2",
         storages: [
-          { name: "256gb, sim", price: 500 },
-          { name: "256gb, wifi", price: 400 },
-          { name: "512gb, sim", price: 650 },
-          { name: "512gb, wifi", price: 450 },
+          { name: "256gb sim", price: 500 },
+          { name: "256gb wifi", price: 400 },
+          { name: "512gb sim", price: 650 },
+          { name: "512gb wifi", price: 450 },
           { name: "1TB", price: 700 },
         ],
       },
