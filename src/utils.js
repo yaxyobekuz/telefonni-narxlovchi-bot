@@ -417,6 +417,8 @@ const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
   const message_text = `
 ⌚️*${t("device")}:* ${model_name}
 📏*${t("size")}:* ${size_name}
+⚡️*${t("charger")}:* ${charger}
+⛓️*${t("strap")}:* ${strap}
 🔋*${t("battery")}:* ${battery_name}
 📦*${t("box")}:* ${box_docs}
 💰*${t("price")}:* ${pricing_amount_message}
@@ -429,6 +431,8 @@ ${t("subscribe_prompt")}
 
 ⌚️**${t("device")}:** ${model_name}
 📏**${t("size")}:** ${size_name}
+⚡️**${t("charger")}:** ${charger}
+⛓️**${t("strap")}:** ${strap}
 🔋**${t("battery")}:** ${battery_name}
 📦**${t("box")}:** ${box_docs}
 💰**${t("price")}:** ${pricing_amount_message}`;

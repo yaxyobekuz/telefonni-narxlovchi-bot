@@ -218,8 +218,8 @@ const devices = [
         { name: "150+", percent: 40 },
       ],
       screen: [
-        { name: "0-10%", price: 50 },
-        { name: "10-100%", price: 100 },
+        { name: "0-30%", price: 50 },
+        { name: "30-100%", price: 100 },
       ],
       accessories: {
         adapters: [
@@ -291,8 +291,8 @@ const devices = [
         { name: "70-80%", percent: 15 },
       ],
       screen: [
-        { name: "0-10%", price: 50 },
-        { name: "10-100%", price: 100 },
+        { name: "0-30%", price: 50 },
+        { name: "30-100%", price: 100 },
       ],
       appearance: [
         { name: "80-100%", price: 50 },

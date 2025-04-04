@@ -148,10 +148,10 @@ const texts = {
     en: "*Error* ❌\n\nInvalid phone number entered. Please try again.",
   },
   device_screen_scratch: {
-    uz: "📺 Qurilma ekrani qanday darajada tirnalganini kiriting:",
-    oz: "📺 Қурилма экрани қандай даражада тирналганини киритинг:",
-    ru: "📺 Укажите степень царапин на экране устройства:",
-    en: "📺 Enter the level of screen scratches on the device:",
+    uz: "📺 Qurilma ekrani qanday darajada tirnalganini kiriting:\n 0-30% kichik tirnalish\n 30-100% o'rta va yuqori darajadagi tirnalish",
+    oz: "📺 Қурилма экрани қандай даражада тирналганини киритинг:\n 0-30% кичик тирналиш\n 30-100% ўрта ва юқори даражадаги тирналиш",
+    ru: "📺 Введите степень царапин на экране устройства:\n 0-30% небольшая царапина\n 30-100% средняя и высокая царапина",
+    en: "📺 Enter the level of screen scratches on the device:\n 0-30% small scratch\n 30-100% medium and high scratch",
   },
   cancel: {
     uz: "Amal bekor qilindi ❌",
@@ -310,10 +310,10 @@ const texts = {
     en: "No ❌",
   },
   free: {
-    uz: "Bepul",
-    oz: "Бепул",
-    ru: "Бесплатно",
-    en: "Free",
+    uz: "Olinmaydi ❌",
+    oz: "Олинмайди ❌",
+    ru: "Не доступно ❌",
+    en: "Not available ❌",
   },
   subscribe_prompt: {
     uz: "Bizning ijtimoiy tarmoqlarimizga obuna bo'lishni unutmang!",
@@ -423,7 +423,18 @@ const texts = {
     ru: "Экран",
     en: "Screen",
   },
-  
+  charger: {
+    uz: "Quvvatlagich",
+    oz: "Қувватлагич",
+    ru: "Зарядное устройство",
+    en: "Charger",
+  },
+  strap: {
+    uz: "Tasma",
+    oz: "Тасма",
+    ru: "Ремешок",
+    en: "Strap",
+  },
 };
 
 module.exports = texts;
