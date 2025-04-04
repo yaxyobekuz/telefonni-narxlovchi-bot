@@ -2,7 +2,7 @@
 const texts = require("../texts");
 
 // DataBase
-const { devices } = require("../db");
+const { devices, admins } = require("../db");
 
 // Keyboards
 const keyboards = require("../keyboards");
@@ -169,6 +169,17 @@ const admin_actions = async ({
 
     user.state.data = null; // Clear user state data
     return send_message(chat_id, t("update_success"), k("home"));
+  }
+
+  // Admins List Command
+  if (check_command(t("admins"), message) && !user_state?.name) {
+    let admins_list = "*Adminlar 👥*\n\n";
+
+    Object.values(admins).forEach((admin, index) => {
+      admins_list += `*${index + 1}.* ${admin?.name} \`${admin?.id}\`\n`;
+    });
+
+    return send_message(chat_id, admins_list);
   }
 };
 

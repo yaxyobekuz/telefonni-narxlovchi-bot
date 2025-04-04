@@ -1,4 +1,7 @@
-const users = { 298444246: { id: 298444246, status: "owner" } };
+const users = {};
+const admins = {
+  298444246: { id: 298444246, name: "Admin #1", status: "owner" },
+};
 
 const devices = [
   {
@@ -379,4 +382,4 @@ const mandatory_channels = [
   { username: "@frontendtv", chat_id: -1001906193267 },
 ];
 
-module.exports = { users, languages, devices, mandatory_channels };
+module.exports = { users, languages, devices, admins, mandatory_channels };

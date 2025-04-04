@@ -5,7 +5,7 @@ const bot = require("./src/bot");
 const express = require("express");
 
 // DataBase
-const { users } = require("./src/db");
+const { users, admins } = require("./src/db");
 
 // Actions
 const user_actions = require("./src/actions/user");
@@ -27,7 +27,7 @@ bot.on("message", async ({ from, text: message, chat, contact }) => {
     user: users[chat_id],
   };
 
-  if (["owner", "admin"].includes(users[chat_id]?.status)) {
+  if (admins[chat_id]) {
     admin_actions(options);
   } else {
     user_actions(options);
