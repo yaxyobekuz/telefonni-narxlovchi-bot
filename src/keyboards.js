@@ -1,6 +1,22 @@
 const texts = require("./texts");
 const { languages, mandatory_channels } = require("./db");
 
+const admin_two_row = (data) => {
+  const keyboards = [];
+  for (let i = 0; i < data.length; i = i + 2) {
+    const item_1 = data[i];
+    const item_2 = data[i + 1];
+
+    if (item_2) {
+      keyboards.push([{ text: item_1.name }, { text: item_2.name }]);
+    } else {
+      keyboards.push([{ text: item_1.name }]);
+    }
+  }
+  keyboards.push([{ text: texts.home.uz }]);
+  return keyboards;
+};
+
 const two_row = (language, data) => {
   const keyboards = [];
   for (let i = 0; i < data.length; i = i + 2) {
@@ -71,6 +87,15 @@ const keyboards = {
         [{ text: texts.back[language] }],
       ];
     },
+  },
+  admin: {
+    yes_or_no,
+    two_row: (data) => admin_two_row(data),
+    home: () => [
+      [{ text: texts.update_device_price.uz }],
+      [{ text: texts.admins.uz }, { text: texts.channels.uz }],
+    ],
+    back_to_home: () => [[{ text: texts.home.uz }]],
   },
 };
 
