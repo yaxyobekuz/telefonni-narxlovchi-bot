@@ -42,26 +42,6 @@ const phone_steps = ({
     update_state_name("step_3"); // Update user state name
     update_state_data("memory", memory); // Update user state data
 
-    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-  }
-
-  // Step 3 (Box Docs)
-  if (check_state_name("step_3")) {
-    if (
-      !is_back &&
-      !check_command(t("no"), message) &&
-      !check_command(t("yes"), message)
-    ) {
-      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
-    }
-
-    if (is_back) {
-      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
-    }
-
-    update_state_name("step_4"); // Update user state name
-    update_state_data("box_docs", message); // Update user state data
-
     return send_message(
       chat_id,
       t("device_battery_capacity"),
@@ -69,8 +49,8 @@ const phone_steps = ({
     );
   }
 
-  // Step 4 (Battery Capacity)
-  if (check_state_name("step_4")) {
+  // Step 3 (Battery Capacity)
+  if (check_state_name("step_3")) {
     const battery_capacities = device.deductions.battery;
     const battery = battery_capacities.find(
       (battery) => battery.name === message
@@ -92,7 +72,7 @@ const phone_steps = ({
       );
     }
 
-    update_state_name("step_5"); // Update user state name
+    update_state_name("step_4"); // Update user state name
     update_state_data("battery_capacity", battery); // Update user state data
 
     return send_message(
@@ -102,8 +82,8 @@ const phone_steps = ({
     );
   }
 
-  // Step 5 (Screen Scratch)
-  if (check_state_name("step_5")) {
+  // Step 4 (Screen Scratch)
+  if (check_state_name("step_4")) {
     const screen_scratches = device.deductions.screen;
     const screen = screen_scratches.find((screen) => screen.name === message);
 
@@ -123,7 +103,7 @@ const phone_steps = ({
       );
     }
 
-    update_state_name("step_6"); // Update user state name
+    update_state_name("step_5"); // Update user state name
     update_state_data("screen", screen); // Update user state data
 
     return send_message(
@@ -133,8 +113,8 @@ const phone_steps = ({
     );
   }
 
-  // Step 6 (Appearance)
-  if (check_state_name("step_6")) {
+  // Step 5 (Appearance)
+  if (check_state_name("step_5")) {
     const appearances = device.deductions.appearance;
     const appearance = appearances.find(
       (appearance) => appearance.name === message
@@ -156,8 +136,28 @@ const phone_steps = ({
       );
     }
 
-    update_state_name("step_7"); // Update user state name
+    update_state_name("step_6"); // Update user state name
     update_state_data("appearance", appearance); // Update user state data
+
+    return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
+  }
+
+  // Step 6 (Box Docs)
+  if (check_state_name("step_6")) {
+    if (
+      !is_back &&
+      !check_command(t("no"), message) &&
+      !check_command(t("yes"), message)
+    ) {
+      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
+    }
+
+    if (is_back) {
+      return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
+    }
+
+    update_state_name("step_7"); // Update user state name
+    update_state_data("box_docs", message); // Update user state data
 
     return send_message(chat_id, t("device_cable"), k("yes_or_no"));
   }
