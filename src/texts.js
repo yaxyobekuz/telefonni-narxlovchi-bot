@@ -243,6 +243,48 @@ const texts = {
     ru: "🖲 Введите тип адаптера устройства:",
     en: "🖲 Enter the type of device adapter:",
   },
+  update_success: {
+    uz: "✅ Ma'lumotlar muvaffaqiyatli yangilandi!",
+    oz: "✅ Маълумотлар муваффақиятли янгиланди!",
+    ru: "✅ Данные успешно обновлены!",
+    en: "✅ Data successfully updated!",
+  },
+  update_error: {
+    uz: "❌ Ma'lumotlarni yangilashda xatolik!",
+    oz: "❌ Маълумотларни янгилашда хатолик!",
+    ru: "❌ Ошибка при обновлении данных!",
+    en: "❌ Error updating data!",
+  },
+  home: {
+    uz: "⬅️ Bosh sahifa ",
+    oz: "⬅️ Бош саҳифа ",
+    ru: "⬅️ Главная страница ",
+    en: "⬅️ Home ",
+  },
+  enter_new_price: {
+    uz: "💸 Yangi narxni kiriting. Masalan, 99",
+    oz: "💸 Янги нархни киритинг. Масалан, 99",
+    ru: "💸 Введите новую цену. Например, 99",
+    en: "💸 Enter the new price. For example, 99",
+  },
+  update_device_price: {
+    uz: "Qurilma narxini o'zgartirish 🔄",
+    oz: "Қурилма нархини ўзгартириш 🔄",
+    ru: "Изменить цену устройства 🔄",
+    en: "Update device price 🔄",
+  },
+  admins: {
+    uz: "Adminlar 👥",
+    oz: "Админлар 👥",
+    ru: "Администраторы 👥",
+    en: "Admins 👥",
+  },
+  channels: {
+    uz: "Kanallar 📣",
+    oz: "Каналлар 📣",
+    ru: "Каналы 📣",
+    en: "Channels 📣",
+  },
   step_7: {
     uz: "💥 Qurilmaga shikast yetganmi?",
     oz: "💥 Қурилмага шикаст етганми?",
