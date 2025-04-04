@@ -74,6 +74,11 @@ const user_actions = async ({
     return update_state_name();
   }
 
+  // Start
+  if (check_command("/start", message) && !user_state?.name) {
+    return send_message(chat_id, t("greeting"), k("home"));
+  }
+
   // Help
   if (check_command(t("help"), message) && !user_state?.name) {
     return send_message(chat_id, t("contact"));

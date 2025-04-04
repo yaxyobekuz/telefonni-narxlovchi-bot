@@ -58,10 +58,10 @@ const texts = {
     };
   },
   contact: {
-    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAdmin: @adminbek",
-    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАдмин: @adminbek",
-    ru: "Для получения помощи напишите следующему администратору 👇\nАдмин: @adminbek",
-    en: "For assistance, write to the following admin 👇\nAdmin: @adminbek",
+    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAdmin: @TimurMacbroC1",
+    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАдмин: @TimurMacbroC1",
+    ru: "Для получения помощи напишите следующему администратору 👇\nАдмин: @TimurMacbroC1",
+    en: "For assistance, write to the following admin 👇\nAdmin: @TimurMacbroC1",
   },
   help: {
     uz: "Yordam olish ☎️",
@@ -328,10 +328,10 @@ const texts = {
     en: "» Share «",
   },
   contact_admin: {
-    uz: "Agar qurilmangizni sotmoqchi bo'lsangiz @adminbek ga murojaat qiling! 😊",
-    oz: "Агар қурилмангизни сотмоқчи бўлсангиз @adminbek га мурожаат қилинг! 😊",
-    ru: "Если вы хотите продать своё устройство, свяжитесь с @adminbek! 😊",
-    en: "If you want to sell your device, contact @adminbek! 😊",
+    uz: "Agar qurilmangizni sotmoqchi bo'lsangiz @TimurMacbroC1 ga murojaat qiling! 😊",
+    oz: "Агар қурилмангизни сотмоқчи бўлсангиз @TimurMacbroC1 га мурожаат қилинг! 😊",
+    ru: "Если вы хотите продать своё устройство, свяжитесь с @TimurMacbroC1! 😊",
+    en: "If you want to sell your device, contact @TimurMacbroC1! 😊",
   },
   exists: {
     uz: "Bor",
