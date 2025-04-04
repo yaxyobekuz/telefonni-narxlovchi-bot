@@ -173,7 +173,6 @@ const admin_actions = async ({
 
   // Admins List Command
   if (check_command(t("admins"), message) && !user_state?.name) {
-    ``;
     let admins_list = `*${t("admins")}*\n`;
 
     Object.values(admins).forEach((admin, index) => {

@@ -351,6 +351,79 @@ const texts = {
     ru: "Отлично",
     en: "Excellent",
   },
+  device: {
+    uz: "Qurilma",
+    oz: "Қурилма",
+    ru: "Устройство",
+    en: "Device",
+  },
+  battery: {
+    uz: "Batareya",
+    oz: "Батарея",
+    ru: "Батарея",
+    en: "Battery",
+  },
+  size: {
+    uz: "O'lcham",
+    oz: "Ўлчам",
+    ru: "Размер",
+    en: "Size",
+  },
+  box: {
+    uz: "Quti",
+    oz: "Қути",
+    ru: "Коробка",
+    en: "Box",
+  },
+  price: {
+    uz: "Narx",
+    oz: "Нарх",
+    ru: "Цена",
+    en: "Price",
+  },
+  condition: {
+    uz: "Holat",
+    oz: "Ҳолат",
+    ru: "Состояние",
+    en: "Condition",
+  },
+  memory: {
+    uz: "Xotira",
+    oz: "Хотира",
+    ru: "Память",
+    en: "Memory",
+  },
+  adapter: {
+    uz: "Adapter",
+    oz: "Адаптер",
+    ru: "Адаптер",
+    en: "Adapter",
+  },
+  appearance: {
+    uz: "Ko'rinish",
+    oz: "Кўриниш",
+    ru: "Внешний вид",
+    en: "Appearance",
+  },
+  country: {
+    uz: "Mamlakat",
+    oz: "Мамлакат",
+    ru: "Страна",
+    en: "Country",
+  },
+  cable: {
+    uz: "Kabel",
+    oz: "Кабель",
+    ru: "Кабель",
+    en: "Cable",
+  },
+  screen: {
+    uz: "Ekran",
+    oz: "Экран",
+    ru: "Экран",
+    en: "Screen",
+  },
+  
 };
 
 module.exports = texts;

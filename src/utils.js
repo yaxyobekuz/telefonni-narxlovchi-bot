@@ -166,15 +166,15 @@ const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-📱 *${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-📺 ${screen_name}
-🔋 ${battery_name}
-🌎 ${country_name}
-📦 ${box_docs}
-🔌 ${cable}
-💰 ${pricing_amount_message}*
+📱*${t("device")}*: ${model_name}
+🧠*${t("memory")}*: ${memory_name}
+✨*${t("appearance")}*: ${appearance_name}
+📺*${t("screen")}*: ${screen_name}
+🔋*${t("battery")}*: ${battery_name}
+🌎*${t("country")}*: ${country_name}
+📦*${t("box")}*: ${box_docs}
+🔌*${t("cable")}*: ${cable}
+💰*${t("price")}*: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -182,7 +182,7 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-📱 **${model_name}
+📱 ${model_name}
 🧠 ${memory_name}
 ✨ ${appearance_name}
 📺 ${screen_name}
@@ -190,7 +190,7 @@ ${t("subscribe_prompt")}
 🌎 ${country_name}
 📦 ${box_docs}
 🔌 ${cable}
-💰 ${pricing_amount_message}**`;
+💰 ${pricing_amount_message}`;
 
   // Send message
   send_message(chat_id, message_text, {
@@ -246,12 +246,12 @@ const send_ipad_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-📱 *${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-🔋 ${battery_name}
-📦 ${box_docs}
-💰 ${pricing_amount_message}*
+📱*${t("device")}*: ${model_name}
+🧠*${t("memory")}*: ${memory_name}
+✨*${t("appearance")}*: ${appearance_name}
+🔋*${t("battery")}*: ${battery_name}
+📦*${t("box")}*: ${box_docs}
+💰*${t("price")}*: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -259,12 +259,12 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-📱 **${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-🔋 ${battery_name}
-📦 ${box_docs}
-💰 ${pricing_amount_message}**`;
+📱**${t("device")}**: ${model_name}
+🧠**${t("memory")}**: ${memory_name}
+✨**${t("appearance")}**: ${appearance_name}
+🔋**${t("battery")}**: ${battery_name}
+📦**${t("box")}**: ${box_docs}
+💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
   send_message(chat_id, message_text, {
@@ -327,14 +327,14 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-💻 *${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-📺 ${screen_name}
-🔋 ${battery_name}
-📦 ${box_docs}
-🖲 ${adapter_name}
-💰 ${pricing_amount_message}*
+💻*${t("device")}*: ${model_name}
+🧠*${t("memory")}*: ${memory_name}
+✨*${t("appearance")}*: ${appearance_name}
+📺*${t("screen")}*: ${screen_name}
+🔋*${t("battery")}*: ${battery_name}
+📦*${t("box")}*: ${box_docs}
+🖲*${t("adapter")}*: ${adapter_name}
+💰*${t("price")}*: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -342,14 +342,14 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-💻 **${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-📺 ${screen_name}
-🔋 ${battery_name}
-📦 ${box_docs}
-🖲 ${adapter_name}
-💰 ${pricing_amount_message}**`;
+💻**${t("device")}**: ${model_name}
+🧠**${t("memory")}**: ${memory_name}
+✨**${t("appearance")}**: ${appearance_name}
+📺**${t("screen")}**: ${screen_name}
+🔋**${t("battery")}**: ${battery_name}
+📦**${t("box")}**: ${box_docs}
+🖲**${t("adapter")}**: ${adapter_name}
+💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
   send_message(chat_id, message_text, {
@@ -412,11 +412,11 @@ const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-⌚️ *${model_name}
-📏 ${size_name}
-🔋 ${battery_name}
-📦 ${box_docs}
-💰 ${pricing_amount_message}*
+⌚️*${t("device")}:* ${model_name}
+📏*${t("size")}:* ${size_name}
+🔋*${t("battery")}:* ${battery_name}
+📦*${t("box")}:* ${box_docs}
+💰*${t("price")}:* ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -424,11 +424,11 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-⌚️ **${model_name}
-📏 ${size_name}
-🔋 ${battery_name}
-📦 ${box_docs}
-💰 ${pricing_amount_message}**`;
+⌚️**${t("device")}:** ${model_name}
+📏**${t("size")}:** ${size_name}
+🔋**${t("battery")}:** ${battery_name}
+📦**${t("box")}:** ${box_docs}
+💰**${t("price")}:** ${pricing_amount_message}`;
 
   // Send message
   send_message(chat_id, message_text, {
@@ -482,10 +482,10 @@ const send_airpods_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-🎧 *${model_name}
-🛠 ${status_name}
-📦 ${box_docs}
-💰 ${pricing_amount_message}*
+🎧*${t("device")}*: ${model_name}
+🛠*${t("condition")}*: ${status_name}
+📦*${t("box")}*: ${box_docs}
+💰*${t("price")}*: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -493,10 +493,10 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-🎧 **${model_name}
-🛠 ${status_name}
-📦 ${box_docs}
-💰 ${pricing_amount_message}**`;
+🎧**${t("device")}**: ${model_name}
+🛠**${t("condition")}**: ${status_name}
+📦**${t("box")}**: ${box_docs}
+💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
   send_message(chat_id, message_text, {
