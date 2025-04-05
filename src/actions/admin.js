@@ -168,7 +168,7 @@ const admin_actions = async ({
       send_message(chat_id, t("update_error"), k("home"));
     }
 
-    user.state.data = null; // Clear user state data
+    user.state.name = null; // Clear user state name
     return send_message(chat_id, t("update_success"), k("home"));
   }
 
