@@ -136,8 +136,6 @@ const admin_actions = async ({
     const device_storage = state_data?.device;
     const amount = Number(message?.replace(/\D/g, ""));
 
-    console.log(amount);
-
     if (typeof amount !== "number" || amount === NaN || amount <= 0) {
       return send_message(chat_id, t("invalid_value"));
     }
