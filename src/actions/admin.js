@@ -1,9 +1,6 @@
 // Texts
 const texts = require("../texts");
 
-// DataBase
-const { devices, admins, mandatory_channels } = require("../db");
-
 // Keyboards
 const keyboards = require("../keyboards");
 
@@ -12,6 +9,9 @@ const use_user_state = require("../hooks/use_user_state");
 
 // Utils
 const { send_message, check_command } = require("../utils");
+
+// DataBase
+const { devices, admins, mandatory_channels } = require("../db");
 
 const admin_actions = async ({
   user,
@@ -37,7 +37,8 @@ const admin_actions = async ({
   const state_data = get_state_data();
   const is_back = check_command(t("back"), message);
 
-  if (check_command("/start", message) && !user_state?.name) {
+  if (check_command("/start", message)) {
+    user_state.name = null; // Clear user state name
     return send_message(chat_id, t("greeting"), k("home"));
   }
 
