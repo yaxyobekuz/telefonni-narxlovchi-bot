@@ -205,13 +205,13 @@ ${t("subscribe_prompt")}
   });
 
   // Back to Home
-    send_message(chat_id, t("contact_admin"), {
+  send_message(chat_id, t("contact_admin"), {
     parse_mode: "HTML",
     reply_markup: {
       resize_keyboard: true,
-      keyboard: keyboards.admin.home(),
+      keyboard: keyboards.user.home(language_code),
     },
-  });;
+  });
 
   // Clear user state
   update_state_name();
@@ -285,13 +285,13 @@ ${t("subscribe_prompt")}
   });
 
   // Back to Home
-    send_message(chat_id, t("contact_admin"), {
+  send_message(chat_id, t("contact_admin"), {
     parse_mode: "HTML",
     reply_markup: {
       resize_keyboard: true,
-      keyboard: keyboards.admin.home(),
+      keyboard: keyboards.user.home(language_code),
     },
-  });;
+  });
 
   // Clear user state
   update_state_name();
@@ -376,13 +376,13 @@ ${t("subscribe_prompt")}
   });
 
   // Back to Home
-    send_message(chat_id, t("contact_admin"), {
+  send_message(chat_id, t("contact_admin"), {
     parse_mode: "HTML",
     reply_markup: {
       resize_keyboard: true,
-      keyboard: keyboards.admin.home(),
+      keyboard: keyboards.user.home(language_code),
     },
-  });;
+  });
 
   // Clear user state
   update_state_name();
@@ -469,7 +469,7 @@ ${t("subscribe_prompt")}
     parse_mode: "HTML",
     reply_markup: {
       resize_keyboard: true,
-      keyboard: keyboards.admin.home(),
+      keyboard: keyboards.user.home(language_code),
     },
   });
 
@@ -539,13 +539,13 @@ ${t("subscribe_prompt")}
   });
 
   // Back to Home
-    send_message(chat_id, t("contact_admin"), {
+  send_message(chat_id, t("contact_admin"), {
     parse_mode: "HTML",
     reply_markup: {
       resize_keyboard: true,
-      keyboard: keyboards.admin.home(),
+      keyboard: keyboards.user.home(language_code),
     },
-  });;
+  });
 
   // Clear user state
   update_state_name();
