@@ -58,10 +58,10 @@ const texts = {
     };
   },
   contact: {
-    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAdmin: @TimurMacbroC1",
-    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАдмин: @TimurMacbroC1",
-    ru: "Для получения помощи напишите следующему администратору 👇\nАдмин: @TimurMacbroC1",
-    en: "For assistance, write to the following admin 👇\nAdmin: @TimurMacbroC1",
+    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAdmin: @Abushakhin_Izzat",
+    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАдмин: @Abushakhin_Izzat",
+    ru: "Для получения помощи напишите следующему администратору 👇\nАдмин: @Abushakhin_Izzat",
+    en: "For assistance, write to the following admin 👇\nAdmin: @Abushakhin_Izzat",
   },
   help: {
     uz: "Yordam olish ☎️",
@@ -328,10 +328,10 @@ const texts = {
     en: "» Share «",
   },
   contact_admin: {
-    uz: "Agar qurilmangizni sotmoqchi bo'lsangiz @TimurMacbroC1 ga murojaat qiling! 😊",
-    oz: "Агар қурилмангизни сотмоқчи бўлсангиз @TimurMacbroC1 га мурожаат қилинг! 😊",
-    ru: "Если вы хотите продать своё устройство, свяжитесь с @TimurMacbroC1! 😊",
-    en: "If you want to sell your device, contact @TimurMacbroC1! 😊",
+    uz: "Agar qurilmangizni sotmoqchi bo'lsangiz @Abushakhin_Izzat ga murojaat qiling! 😊",
+    oz: "Агар қурилмангизни сотмоқчи бўлсангиз @Abushakhin_Izzat га мурожаат қилинг! 😊",
+    ru: "Если вы хотите продать своё устройство, свяжитесь с @Abushakhin_Izzat! 😊",
+    en: "If you want to sell your device, contact @Abushakhin_Izzat! 😊",
   },
   exists: {
     uz: "Bor",

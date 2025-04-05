@@ -1,6 +1,6 @@
 const users = {};
 const admins = {
-  7944235778: { id: 7944235778, name: "Ega", status: "owner" },
+  201488968: { id: 201488968, name: "Ega", status: "owner" },
   298444246: { id: 298444246, name: "Admin #1", status: "admin" },
 };
 
