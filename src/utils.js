@@ -34,6 +34,8 @@ const check_user_membership = async (user_id) => {
   return true;
 };
 
+const isNumber = (value) => Number.isFinite(value);
+
 const send_membership_message = (chat_id, language) => {
   send_message(chat_id, texts.membership_required[language], {
     reply_markup: {
@@ -561,6 +563,7 @@ const check_auth = (req, res, next) => {
 };
 
 module.exports = {
+  isNumber,
   check_auth,
   send_message,
   check_command,
