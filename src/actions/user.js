@@ -81,7 +81,13 @@ const user_actions = async ({
 
   // Help
   if (check_command(t("help"), message) && !user_state?.name) {
-    return send_message(chat_id, t("contact"), { parse_mode: "HTML" });
+    return send_message(chat_id, t("contact"), {
+      parse_mode: "HTML",
+      reply_markup: {
+        resize_keyboard: true,
+        inline_keyboard: keyboards.user.admin(user_language),
+      },
+    });
   }
 
   // Device Pricing Command

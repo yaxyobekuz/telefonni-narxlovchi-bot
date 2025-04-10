@@ -380,8 +380,8 @@ const languages = [
 ];
 
 const mandatory_channels = [
-  { username: "@mol_uzb", chat_id: -1001829398323 },
   { username: "@frontendtv", chat_id: -1001906193267 },
+  // { username: "@macbrouz", chat_id: -1001330303317 }
 ];
 
 module.exports = { users, languages, devices, admins, mandatory_channels };
