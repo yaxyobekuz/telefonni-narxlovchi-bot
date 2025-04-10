@@ -69,11 +69,11 @@ const keyboards = {
         [formatted_languages[2], formatted_languages[3]],
       ];
     })(),
-    mandatory_channels: (language) => [
-      ...mandatory_channels.map(({ username }, index) => [
+    mandatory_channels: () => [
+      ...mandatory_channels.map(({ username }) => [
         {
+          text: "» MacBro «",
           url: `https://t.me/${username.substring(1)}`,
-          text: `${texts.channel[language]} #${index + 1}`,
         },
       ]),
     ],
@@ -87,6 +87,9 @@ const keyboards = {
         [{ text: texts.back[language] }],
       ];
     },
+    admin: (language) => [
+      [{ text: texts.admin[language], url: "https://t.me/Abushakhin_Izzat" }],
+    ],
   },
   admin: {
     yes_or_no,

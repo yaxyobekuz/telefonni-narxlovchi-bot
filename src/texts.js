@@ -32,10 +32,10 @@ const texts = {
     en: "📞 Enter my phone number",
   },
   membership_required: {
-    uz: "*Kanallarga obuna bo'lmadingiz* ❌\n\nQuyida keltirilgan kanallarga obuna bo'lib, botdan cheklovlarsiz foydalaning.",
-    oz: "*Каналларга обуна бўлмадингиз* ❌\n\nҚуйида келтирилган каналларга обуна бўлиб, ботдан чекловларсиз фойдаланинг.",
-    ru: "*Вы не подписались на каналы* ❌\n\nПодпишитесь на указанные ниже каналы, чтобы пользоваться ботом без ограничений.",
-    en: "*You have not subscribed to the channels* ❌\n\nSubscribe to the channels below to use the bot without restrictions.",
+    uz: "*Homiy kanalga obuna bo'lmagansiz* ❌\n\nIltimos, quyida keltirilgan homiy kanalga obuna bo'lib, botdan qayta foydalaning.",
+    oz: "*Ҳомий каналга обуна бўлмагансиз* ❌\n\nИлтимос, қуйида келтирилган ҳомий каналга обуна бўлиб, ботдан қайта фойдаланинг.",
+    ru: "*Вы не подписаны на спонсорский канал* ❌\n\nПожалуйста, подпишитесь на спонсорский канал ниже и повторно используйте бота.",
+    en: "*You are not subscribed to the sponsor channel* ❌\n\nPlease subscribe to the sponsor channel below and use the bot again.",
   },
   check_membership: {
     uz: "A'zolikni tekshirish",
@@ -332,6 +332,12 @@ const texts = {
     oz: "Агар қурилмангизни сотмоқчи бўлсангиз @Abushakhin_Izzat га мурожаат қилинг! 😊",
     ru: "Если вы хотите продать своё устройство, свяжитесь с @Abushakhin_Izzat! 😊",
     en: "If you want to sell your device, contact @Abushakhin_Izzat! 😊",
+  },
+  admin: {
+    uz: "» Admin «",
+    oz: "» Админ «",
+    ru: "» Админ «",
+    en: "» Admin «",
   },
   exists: {
     uz: "Bor",
