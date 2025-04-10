@@ -441,6 +441,36 @@ const texts = {
     ru: "Ремешок",
     en: "Strap",
   },
+  statistics: {
+    uz: "Statistika 📊",
+    oz: "Статистика 📊",
+    ru: "Статистика 📊",
+    en: "Statistics 📊",
+  },
+  add_device_model: {
+    uz: "Qurilma modelini qo'shish 🆕",
+    oz: "Қурилма моделини қўшиш 🆕",
+    ru: "Добавить модель устройства 🆕",
+    en: "Add device model 🆕",
+  },
+  delete_device_model: {
+    uz: "Qurilma modelini o'chirish 🗑",
+    oz: "Қурилма моделини ўчириш 🗑",
+    ru: "Удалить модель устройства 🗑",
+    en: "Delete device model 🗑",
+  },
+  model_add_success: {
+    uz: "Yangi model muvaffaqiyatli qo'shildi! ✅",
+    oz: "Янги модел муваффақиятли қўшилди! ✅",
+    ru: "Новая модель успешно добавлена! ✅",
+    en: "New model added successfully! ✅",
+  },
+  model_add_error: {
+    uz: "Yangi model qo'shishda noma'lum xatolik yuz berdi! ❌",
+    oz: "Янги модел қўшишда номаълум хатолик юз берди! ❌",
+    ru: "Произошла неизвестная ошибка при добавлении новой модели! ❌",
+    en: "An unknown error occurred while adding the new model! ❌",
+  },
 };
 
 module.exports = texts;
