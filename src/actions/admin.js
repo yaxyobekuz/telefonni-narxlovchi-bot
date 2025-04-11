@@ -2,7 +2,7 @@
 const texts = require("../texts");
 
 // DataBase
-const { devices } = require("../db");
+const { devices, statistics } = require("../db");
 
 // Keyboards
 const keyboards = require("../keyboards");
@@ -52,6 +52,24 @@ const admin_actions = async ({
   if (check_command(t("home"), message)) {
     clearState();
     return send_message(chat_id, t("cancel"), k("home"));
+  }
+
+  // Statistics
+  if (check_command(t("statistics"), message)) {
+    let click_stats = "";
+
+    Object.keys(statistics.clicks).forEach((name) => {
+      click_stats += "\n";
+      click_stats += `*${name}:* ${statistics.clicks[name]?.toLocaleString()}`;
+    });
+
+    return send_message(
+      chat_id,
+      `*${t(
+        "statistics"
+      )}*\n\n*💸 Narxlash bo'yicha:*\n${click_stats}\n\n*👥 Jami foydalanuvchilar:* ${statistics.users?.toLocaleString()}\n\n*📞 Ro'yxatdan o'tgan foydalanuvchilar:* ${statistics.registered_users?.toLocaleString()}`,
+      k("home")
+    );
   }
 
   // Device Pricing Command

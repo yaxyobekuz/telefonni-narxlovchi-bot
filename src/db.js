@@ -1,4 +1,17 @@
+const statistics = {
+  users: 0,
+  registered_users: 0,
+  clicks: {
+    ipad: 0,
+    iphone: 0,
+    iwatch: 0,
+    airpods: 0,
+    macbook: 0,
+  },
+};
+
 const users = {};
+
 const admins = {
   201488968: { id: 201488968, name: "Abushakhin (Ega)", status: "owner" },
   298444246: { id: 298444246, name: "Developer Admin", status: "admin" },
@@ -380,4 +393,11 @@ const languages = [
 
 const mandatory_channels = [{ username: "@macbrouz", chat_id: -1001330303317 }];
 
-module.exports = { users, languages, devices, admins, mandatory_channels };
+module.exports = {
+  users,
+  admins,
+  devices,
+  languages,
+  statistics,
+  mandatory_channels,
+};

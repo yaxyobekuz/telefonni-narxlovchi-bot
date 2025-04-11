@@ -14,7 +14,13 @@ const { security_token } = require("../env.config");
 const use_calculate = require("./hooks/use_calculate");
 
 // DataBase
-const { users, languages, mandatory_channels, admins } = require("./db");
+const {
+  users,
+  languages,
+  mandatory_channels,
+  admins,
+  statistics,
+} = require("./db");
 
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
@@ -41,6 +47,10 @@ const check_user_membership = async (user_id) => {
   }
 
   return true;
+};
+
+const update_click_stats = (key = "iphone") => {
+  statistics.clicks[key] = statistics.clicks[key] + 1;
 };
 
 const isNumber = (value) => Number.isFinite(value);
@@ -128,8 +138,10 @@ const send_language_selection_message = (user_id) => {
 
   users[user_id].state.name = "language_selection";
 };
+
 const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
   if (!user) return;
+  update_click_stats();
 
   const {
     id: chat_id,
@@ -230,6 +242,7 @@ ${t("subscribe_prompt")}
 
 const send_ipad_pricing_message = ({ k, t, user, update_state_name }) => {
   if (!user) return;
+  update_click_stats("ipad");
 
   const {
     id: chat_id,
@@ -310,6 +323,7 @@ ${t("subscribe_prompt")}
 
 const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
   if (!user) return;
+  update_click_stats("macbook");
 
   const {
     id: chat_id,
@@ -401,6 +415,7 @@ ${t("subscribe_prompt")}
 
 const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
   if (!user) return;
+  update_click_stats("iwatch");
 
   const {
     id: chat_id,
@@ -490,6 +505,7 @@ ${t("subscribe_prompt")}
 
 const send_airpods_pricing_message = ({ k, t, user, update_state_name }) => {
   if (!user) return;
+  update_click_stats("airpods");
 
   const {
     id: chat_id,

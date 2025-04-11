@@ -8,7 +8,7 @@ const {
   send_language_selection_message,
 } = require("../utils");
 const texts = require("../texts");
-const { devices } = require("../db");
+const { devices, statistics } = require("../db");
 const keyboards = require("../keyboards");
 const run_steps = require("../steps/index");
 const use_user_state = require("../hooks/use_user_state");
@@ -68,6 +68,7 @@ const user_actions = async ({
     }
 
     user.contact = contact.phone_number; // Update user contact
+    statistics.registered_users = statistics.registered_users + 1;
 
     send_message(chat_id, t("registration_successful"), k("home"));
 

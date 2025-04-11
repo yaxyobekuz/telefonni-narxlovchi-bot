@@ -5,7 +5,7 @@ const bot = require("./src/bot");
 const { check_auth } = require("./src/utils");
 
 // DataBase
-const { users, admins } = require("./src/db");
+const { users, admins, statistics } = require("./src/db");
 
 // Actions
 const user_actions = require("./src/actions/user");
@@ -21,6 +21,7 @@ bot.on("message", async ({ from, text: message, chat, contact }) => {
   const chat_id = chat.id;
 
   if (!users[chat_id]) {
+    statistics.users = statistics.users + 1;
     users[chat_id] = { ...from, language_code: null };
   }
 
