@@ -471,6 +471,18 @@ const texts = {
     ru: "Произошла неизвестная ошибка при добавлении новой модели! ❌",
     en: "An unknown error occurred while adding the new model! ❌",
   },
+  model_delete_success: {
+    uz: "Qurilma modeli muvaffaqiyatli o'chirildi! ✅",
+    oz: "Қурилма модели муваффақиятли ўчирилди! ✅",
+    ru: "Модель устройства успешно удалена! ✅",
+    en: "Device model deleted successfully! ✅",
+  },
+  model_delete_error: {
+    uz: "Modelni o'chirishda noma'lum xatolik yuz berdi! ❌",
+    oz: "Моделни ўчиришда номаълум хатолик юз берди! ❌",
+    ru: "Произошла неизвестная ошибка при удалении модели! ❌",
+    en: "An unknown error occurred while deleting the model! ❌",
+  },
 };
 
 module.exports = texts;

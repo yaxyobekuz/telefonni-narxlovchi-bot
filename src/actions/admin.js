@@ -73,7 +73,10 @@ const admin_actions = async ({
   }
 
   // Step 0 (Device Selection)
-  if (check_state_name("update_price_0")) {
+  if (
+    check_state_name("update_price_0") ||
+    check_state_name("delete_device_model_0")
+  ) {
     const device = devices.find((device) => device.name === message);
 
     if (!device) {
@@ -105,14 +108,24 @@ const admin_actions = async ({
     );
 
     update_state_data("device", device); // Update user state data
-    return update_state_name("update_price_1"); // Update user state name
+
+    // Update user state name
+    if (check_state_name("update_price_0")) update_state_name("update_price_1");
+    else update_state_name("delete_device_model_1");
+
+    return;
   }
 
   // Step 1 (Model Selection)
-  if (check_state_name("update_price_1")) {
+  if (
+    check_state_name("update_price_1") ||
+    check_state_name("delete_device_model_1")
+  ) {
     const device = state_data?.device;
     const [model_name, model_type] = message?.split(", ") || [];
-    const model = device.models.find((model) => model.name === model_name);
+    const model = device.models.find(({ name }) =>
+      check_command(name, model_name)
+    );
 
     if (!model) {
       const formatted_device_models = () => {
@@ -140,11 +153,64 @@ const admin_actions = async ({
       );
     }
 
-    // Update user state data
-    update_state_data("model", { name: model_name, type: model_type });
+    if (check_state_name("update_price_1")) {
+      // Update user state data
+      update_state_data("model", { name: model_name, type: model_type });
 
-    send_message(chat_id, t("enter_new_price"), k("back_to_home"));
-    return update_state_name("update_price_2"); // Update user state name
+      send_message(chat_id, t("enter_new_price"), k("back_to_home"));
+      return update_state_name("update_price_2"); // Update user state name
+    }
+
+    try {
+      const device_name = device?.name;
+
+      const deviceDB = devices.find(({ name }) =>
+        check_command(name, device?.name)
+      );
+
+      const modelDB = deviceDB.models.find(({ name }) =>
+        check_command(name, model_name)
+      );
+
+      // iWatch
+      if (check_command(device_name, "iwatch")) {
+        if (modelDB?.sizes?.length > 1) {
+          modelDB.sizes = modelDB.sizes.filter(
+            ({ name }) => !check_command(name, model_type)
+          );
+        } else {
+          deviceDB.models = deviceDB.models.filter(
+            ({ name }) => !check_command(name, model_name)
+          );
+        }
+      }
+
+      // AirPods
+      else if (check_command(device_name, "airpods")) {
+        deviceDB.models = deviceDB.models.filter(
+          ({ name }) => !check_command(name, model_name)
+        );
+      }
+
+      // Others
+      else {
+        if (modelDB?.storages?.length > 1) {
+          modelDB.storages = modelDB.storages.filter(
+            ({ name }) => !check_command(name, model_type)
+          );
+        } else {
+          deviceDB.models = deviceDB.models.filter(
+            ({ name }) => !check_command(name, model_name)
+          );
+        }
+      }
+
+      send_message(chat_id, t("model_delete_success"), k("home"));
+    } catch {
+      send_message(chat_id, t("model_delete_error"), k("home"));
+    }
+
+    return clearState();
   }
 
   // Step 2 (Model Type Selection)
@@ -179,15 +245,15 @@ const admin_actions = async ({
 
     try {
       data().price = amount;
+      send_message(chat_id, t("update_success"), k("home"));
     } catch {
       send_message(chat_id, t("update_error"), k("home"));
     }
 
-    user.state.name = null; // Clear user state name
-    return send_message(chat_id, t("update_success"), k("home"));
+    return clearState(); // Clear user state name
   }
 
-  // Step 0 (Device Selection For model add)
+  // Step 0 (Device Selection For add model)
   if (check_state_name("add_device_model_0")) {
     const device_name = devices
       .find((device) => device.name === message)
@@ -207,7 +273,7 @@ const admin_actions = async ({
         return `*Qurilma modelini qo'shish 🆕*\n\nYangi  qurilma modelini qo'shish uchun 1ta xabarda Model nomi va narxini kiriting.\n\nMisol uchun: *AirPods 2.1, 30*`;
       }
 
-      return `*Qurilma modelini qo'shish 🆕*\n\nYangi  qurilma modelini qo'shish uchun 1ta xabarda Model nomi, xotirasi va narxini kiriting.\n\nMisol uchun: *iPhone 11, 128bg, 700*`;
+      return `*Qurilma modelini qo'shish 🆕*\n\nYangi  qurilma modelini qo'shish uchun 1ta xabarda Model nomi, xotirasi va narxini kiriting.\n\nMisol uchun: *iPhone 11, 128gb, 700*`;
     };
 
     send_message(chat_id, formatted_device_model_message(), k("back_to_home"));
@@ -255,12 +321,12 @@ const admin_actions = async ({
           });
         }
 
-        clearState();
-        return send_message(chat_id, t("model_add_success"), k("home"));
+        send_message(chat_id, t("model_add_success"), k("home"));
       } catch {
-        clearState();
-        return send_message(chat_id, t("model_add_error"), k("home"));
+        send_message(chat_id, t("model_add_error"), k("home"));
       }
+
+      return clearState();
     }
 
     // AirPods
@@ -274,23 +340,15 @@ const admin_actions = async ({
         if (model) {
           model.price = Number(price);
         } else {
-          device.models.push({
-            name: model_name,
-            sizes: [
-              {
-                name: model_size,
-                price: Number(price),
-              },
-            ],
-          });
+          device.models.push({ name: model_name, price: Number(price) });
         }
 
-        clearState();
-        return send_message(chat_id, t("model_add_success"), k("home"));
+        send_message(chat_id, t("model_add_success"), k("home"));
       } catch {
-        clearState();
-        return send_message(chat_id, t("model_add_error"), k("home"));
+        send_message(chat_id, t("model_add_error"), k("home"));
       }
+
+      return clearState();
     }
 
     // Others
@@ -309,12 +367,12 @@ const admin_actions = async ({
         });
       }
 
-      clearState();
-      return send_message(chat_id, t("model_add_success"), k("home"));
+      send_message(chat_id, t("model_add_success"), k("home"));
     } catch {
-      clearState();
-      return send_message(chat_id, t("model_add_error"), k("home"));
+      send_message(chat_id, t("model_add_error"), k("home"));
     }
+
+    return clearState();
   }
 };
 
