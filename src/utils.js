@@ -14,20 +14,29 @@ const { security_token } = require("../env.config");
 const use_calculate = require("./hooks/use_calculate");
 
 // DataBase
-const { users, languages, mandatory_channels } = require("./db");
+const { users, languages, mandatory_channels, admins } = require("./db");
 
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
 
 const send_message = (chat_id, text, options) => {
-  bot.sendMessage(chat_id, text, { parse_mode: "Markdown", ...options });
+  try {
+    bot.sendMessage(chat_id, text, { parse_mode: "Markdown", ...options });
+  } catch {
+    console.log("Xabarni yuborib bo'lmadi! Foydalanuvchi: " + chat_id);
+  }
 };
 
 const check_user_membership = async (user_id) => {
   for (const channel of mandatory_channels) {
-    const status = await bot.getChatMember(channel.chat_id, user_id);
-    if (!status || ["left", "kicked"].includes(status.status)) {
-      return false;
+    try {
+      const status = await bot.getChatMember(channel.chat_id, user_id);
+
+      if (check_command("left", status?.status)) {
+        return false;
+      }
+    } catch {
+      return true;
     }
   }
 

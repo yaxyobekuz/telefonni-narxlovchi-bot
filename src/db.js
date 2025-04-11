@@ -1,7 +1,7 @@
 const users = {};
 const admins = {
-  201488968: { id: 201488968, name: "Ega", status: "owner" },
-  298444246: { id: 298444246, name: "Admin 2", status: "admin" },
+  201488968: { id: 201488968, name: "Abushakhin (Ega)", status: "owner" },
+  298444246: { id: 298444246, name: "Developer Admin", status: "admin" },
 };
 
 const devices = [
@@ -305,33 +305,33 @@ const devices = [
           { name: "44mm", price: 160 },
         ],
       },
-      // {
-      //   name: "iWatch 10",
-      //   sizes: [
-      //     { name: "42mm", price: 270 },
-      //     { name: "46mm", price: 300 },
-      //   ],
-      // },
-      // {
-      //   name: "iWatch Ultra 2",
-      //   sizes: [{ name: "49mm", price: 400 }],
-      // },
-      // {
-      //   name: "iWatch 9",
-      //   sizes: [{ name: "45mm", price: 200 }],
-      // },
-      // {
-      //   name: "iWatch Ultra Milanese",
-      //   sizes: [{ name: "49mm", price: 600 }],
-      // },
-      // {
-      //   name: "iWatch 7",
-      //   sizes: [{ name: "45mm", price: 100 }],
-      // },
-      // {
-      //   name: "iWatch 8",
-      //   sizes: [{ name: "45mm", price: 130 }],
-      // },
+      {
+        name: "iWatch 10",
+        sizes: [
+          { name: "42mm", price: 270 },
+          { name: "46mm", price: 300 },
+        ],
+      },
+      {
+        name: "iWatch Ultra 2",
+        sizes: [{ name: "49mm", price: 400 }],
+      },
+      {
+        name: "iWatch 9",
+        sizes: [{ name: "45mm", price: 200 }],
+      },
+      {
+        name: "iWatch Ultra Milanese",
+        sizes: [{ name: "49mm", price: 600 }],
+      },
+      {
+        name: "iWatch 7",
+        sizes: [{ name: "45mm", price: 100 }],
+      },
+      {
+        name: "iWatch 8",
+        sizes: [{ name: "45mm", price: 130 }],
+      },
     ],
     deductions: {
       battery: [
@@ -378,9 +378,6 @@ const languages = [
   { value: "en", name: "English 🇬🇧" },
 ];
 
-const mandatory_channels = [
-  { username: "@frontendtv", chat_id: -1001906193267 },
-  // { username: "@macbrouz", chat_id: -1001330303317 }
-];
+const mandatory_channels = [{ username: "@macbrouz", chat_id: -1001330303317 }];
 
 module.exports = { users, languages, devices, admins, mandatory_channels };
