@@ -14,13 +14,7 @@ const { security_token } = require("../env.config");
 const use_calculate = require("./hooks/use_calculate");
 
 // DataBase
-const {
-  users,
-  languages,
-  mandatory_channels,
-  admins,
-  statistics,
-} = require("./db");
+const { users, languages, mandatory_channels, statistics } = require("./db");
 
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
@@ -192,15 +186,15 @@ const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-📱*${t("device")}*: ${model_name}
-🧠*${t("memory")}*: ${memory_name}
-✨*${t("appearance")}*: ${appearance_name}
-📺*${t("screen")}*: ${screen_name}
-🔋*${t("battery")}*: ${battery_name}
-🌎*${t("country")}*: ${country_name}
-📦*${t("box")}*: ${box_docs}
-🔌*${t("cable")}*: ${cable}
-💰*${t("price")}*: ${pricing_amount_message}
+📱<b>${t("device")}</b>: ${model_name}
+🧠<b>${t("memory")}</b>: ${memory_name}
+✨<b>${t("appearance")}</b>: ${appearance_name}
+📺<b>${t("screen")}</b>: ${screen_name}
+🔋<b>${t("battery")}</b>: ${battery_name}
+🌎<b>${t("country")}</b>: ${country_name}
+📦<b>${t("box")}</b>: ${box_docs}
+🔌<b>${t("cable")}</b>: ${cable}
+💰<b>${t("price")}</b>: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -208,23 +202,24 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-📱 ${model_name}
-🧠 ${memory_name}
-✨ ${appearance_name}
-📺 ${screen_name}
-🔋 ${battery_name}
-🌎 ${country_name}
-📦 ${box_docs}
-🔌 ${cable}
-💰 ${pricing_amount_message}`;
+📱**${t("device")}**: ${model_name}
+🧠**${t("memory")}**: ${memory_name}
+✨**${t("appearance")}**: ${appearance_name}
+📺**${t("screen")}**: ${screen_name}
+🔋**${t("battery")}**: ${battery_name}
+🌎**${t("country")}**: ${country_name}
+📦**${t("box")}**: ${box_docs}
+🔌**${t("cable")}**: ${cable}
+💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
   send_message(chat_id, message_text, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: keyboards.user.share(language_code, share_text),
     },
-    disable_web_page_preview: true,
   });
 
   // Back to Home
@@ -279,12 +274,12 @@ const send_ipad_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-📱*${t("device")}*: ${model_name}
-🧠*${t("memory")}*: ${memory_name}
-✨*${t("appearance")}*: ${appearance_name}
-🔋*${t("battery")}*: ${battery_name}
-📦*${t("box")}*: ${box_docs}
-💰*${t("price")}*: ${pricing_amount_message}
+📱<b>${t("device")}</b>: ${model_name}
+🧠<b>${t("memory")}</b>: ${memory_name}
+✨<b>${t("appearance")}</b>: ${appearance_name}
+🔋<b>${t("battery")}</b>: ${battery_name}
+📦<b>${t("box")}</b>: ${box_docs}
+💰<b>${t("price")}</b>: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -301,11 +296,12 @@ ${t("subscribe_prompt")}
 
   // Send message
   send_message(chat_id, message_text, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: keyboards.user.share(language_code, share_text),
     },
-    disable_web_page_preview: true,
   });
 
   // Back to Home
@@ -367,14 +363,14 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-💻*${t("device")}*: ${model_name}
-🧠*${t("memory")}*: ${memory_name}
-✨*${t("appearance")}*: ${appearance_name}
-📺*${t("screen")}*: ${screen_name}
-🔋*${t("battery")}*: ${battery_name}
-📦*${t("box")}*: ${box_docs}
-🖲*${t("adapter")}*: ${adapter_name}
-💰*${t("price")}*: ${pricing_amount_message}
+💻<b>${t("device")}</b>: ${model_name}
+🧠<b>${t("memory")}</b>: ${memory_name}
+✨<b>${t("appearance")}</b>: ${appearance_name}
+📺<b>${t("screen")}</b>: ${screen_name}
+🔋<b>${t("battery")}</b>: ${battery_name}
+📦<b>${t("box")}</b>: ${box_docs}
+🖲<b>${t("adapter")}</b>: ${adapter_name}
+💰<b>${t("price")}</b>: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -393,11 +389,12 @@ ${t("subscribe_prompt")}
 
   // Send message
   send_message(chat_id, message_text, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: keyboards.user.share(language_code, share_text),
     },
-    disable_web_page_preview: true,
   });
 
   // Back to Home
@@ -459,13 +456,13 @@ const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-⌚️*${t("device")}:* ${model_name}
-📏*${t("size")}:* ${size_name}
-⚡️*${t("charger")}:* ${charger}
-⛓️*${t("strap")}:* ${strap}
-🔋*${t("battery")}:* ${battery_name}
-📦*${t("box")}:* ${box_docs}
-💰*${t("price")}:* ${pricing_amount_message}
+⌚️<b>${t("device")}</b>: ${model_name}
+📏<b>${t("size")}</b>: ${size_name}
+⚡️<b>${t("charger")}</b>: ${charger}
+⛓️<b>${t("strap")}</b>: ${strap}
+🔋<b>${t("battery")}</b>: ${battery_name}
+📦<b>${t("box")}</b>: ${box_docs}
+💰<b>${t("price")}</b>: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -473,21 +470,22 @@ ${t("subscribe_prompt")}
 
   const share_text = `
 
-⌚️**${t("device")}:** ${model_name}
-📏**${t("size")}:** ${size_name}
-⚡️**${t("charger")}:** ${charger}
-⛓️**${t("strap")}:** ${strap}
-🔋**${t("battery")}:** ${battery_name}
-📦**${t("box")}:** ${box_docs}
-💰**${t("price")}:** ${pricing_amount_message}`;
+⌚️**${t("device")}**: ${model_name}
+📏**${t("size")}**: ${size_name}
+⚡️**${t("charger")}**: ${charger}
+⛓️**${t("strap")}**: ${strap}
+🔋**${t("battery")}**: ${battery_name}
+📦**${t("box")}**: ${box_docs}
+💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
   send_message(chat_id, message_text, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: keyboards.user.share(language_code, share_text),
     },
-    disable_web_page_preview: true,
   });
 
   // Back to Home
@@ -540,10 +538,10 @@ const send_airpods_pricing_message = ({ k, t, user, update_state_name }) => {
 
   // Message texts
   const message_text = `
-🎧*${t("device")}*: ${model_name}
-🛠*${t("condition")}*: ${status_name}
-📦*${t("box")}*: ${box_docs}
-💰*${t("price")}*: ${pricing_amount_message}
+🎧<b>${t("device")}</b>: ${model_name}
+🛠<b>${t("condition")}</b>: ${status_name}
+📦<b>${t("box")}</b>: ${box_docs}
+💰<b>${t("price")}</b>: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
 
@@ -558,11 +556,12 @@ ${t("subscribe_prompt")}
 
   // Send message
   send_message(chat_id, message_text, {
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
     reply_markup: {
       resize_keyboard: true,
       inline_keyboard: keyboards.user.share(language_code, share_text),
     },
-    disable_web_page_preview: true,
   });
 
   // Back to Home
