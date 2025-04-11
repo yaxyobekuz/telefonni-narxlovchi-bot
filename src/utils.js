@@ -198,7 +198,7 @@ const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
 
 ${t("subscribe_prompt")}
 
-[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
 
   const share_text = `
 
@@ -283,7 +283,7 @@ const send_ipad_pricing_message = ({ k, t, user, update_state_name }) => {
 
 ${t("subscribe_prompt")}
 
-[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
 
   const share_text = `
 
@@ -374,7 +374,7 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
 
 ${t("subscribe_prompt")}
 
-[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
 
   const share_text = `
 
@@ -466,7 +466,7 @@ const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
 
 ${t("subscribe_prompt")}
 
-[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
 
   const share_text = `
 
@@ -545,7 +545,7 @@ const send_airpods_pricing_message = ({ k, t, user, update_state_name }) => {
 
 ${t("subscribe_prompt")}
 
-[Telegram](https://t.me) | [Instagram](https://instagram.com)`;
+<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
 
   const share_text = `
 
