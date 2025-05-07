@@ -106,44 +106,11 @@ const phone_steps = ({
     update_state_name("step_5"); // Update user state name
     update_state_data("screen", screen); // Update user state data
 
-    return send_message(
-      chat_id,
-      t("device_appearance"),
-      k("two_row", device.deductions.appearance)
-    );
-  }
-
-  // Step 5 (Appearance)
-  if (check_state_name("step_5")) {
-    const appearances = device.deductions.appearance;
-    const appearance = appearances.find(
-      (appearance) => appearance.name === message
-    );
-
-    if (!appearance && !is_back) {
-      return send_message(
-        chat_id,
-        t("invalid_value"),
-        k("two_row", appearances)
-      );
-    }
-
-    if (is_back) {
-      return send_message(
-        chat_id,
-        t("device_appearance"),
-        k("two_row", device.deductions.appearance)
-      );
-    }
-
-    update_state_name("step_6"); // Update user state name
-    update_state_data("appearance", appearance); // Update user state data
-
     return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
   }
 
   // Step 6 (Box Docs)
-  if (check_state_name("step_6")) {
+  if (check_state_name("step_5")) {
     if (
       !is_back &&
       !check_command(t("no"), message) &&
@@ -156,28 +123,8 @@ const phone_steps = ({
       return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
     }
 
-    update_state_name("step_7"); // Update user state name
+    update_state_name("step_6"); // Update user state name
     update_state_data("box_docs", message); // Update user state data
-
-    return send_message(chat_id, t("device_cable"), k("yes_or_no"));
-  }
-
-  // Step 7 (Cable)
-  if (check_state_name("step_7")) {
-    if (
-      !is_back &&
-      !check_command(t("no"), message) &&
-      !check_command(t("yes"), message)
-    ) {
-      return send_message(chat_id, t("invalid_value"), k("yes_or_no"));
-    }
-
-    if (is_back) {
-      return send_message(chat_id, t("device_cable"), k("yes_or_no"));
-    }
-
-    update_state_name("step_8"); // Update user state name
-    update_state_data("cable", message); // Update user state data
 
     return send_message(
       chat_id,
@@ -187,7 +134,7 @@ const phone_steps = ({
   }
 
   // Step 8 (Country)
-  if (check_state_name("step_8")) {
+  if (check_state_name("step_6")) {
     const countries = device.deductions.countries;
     const country = countries.find((country) => country.name === message);
 

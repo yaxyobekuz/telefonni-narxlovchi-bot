@@ -8,9 +8,9 @@ const {
   send_language_selection_message,
 } = require("../utils");
 const texts = require("../texts");
-const { devices, statistics } = require("../db");
 const keyboards = require("../keyboards");
 const run_steps = require("../steps/index");
+const { devices, statistics } = require("../db");
 const use_user_state = require("../hooks/use_user_state");
 
 const user_actions = async ({

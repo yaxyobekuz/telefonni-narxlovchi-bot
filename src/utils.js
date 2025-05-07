@@ -147,14 +147,13 @@ const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
         device: {
           deductions: {
             countries,
-            accessories: { box: box_minus, cable: cable_minus },
+            accessories: { box: box_minus },
           },
         },
         model: { name: model_name },
         country: { name: country_name },
         memory: { name: memory_name, price: initial_price },
         screen: { name: screen_name, percent: screen_percent },
-        appearance: { name: appearance_name, percent: appearance_percent },
         battery_capacity: { name: battery_name, percent: battery_percent },
       },
     },
@@ -165,19 +164,11 @@ const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
   // Pricing
   const screen_price = calculate_percentage(screen_percent);
   const battery_price = calculate_percentage(battery_percent);
-  const appearance_price = calculate_percentage(appearance_percent);
-  const cable_price = check_command(t("yes"), cable) ? 0 : cable_minus;
   const box_docs_price = check_command(t("yes"), box_docs) ? 0 : box_minus;
   const country_price = check_command(countries[0].name, country_name) ? 0 : 50;
 
   // Calculate minus
-  const minus =
-    cable_price +
-    screen_price +
-    battery_price +
-    country_price +
-    box_docs_price +
-    appearance_price;
+  const minus = screen_price + battery_price + country_price + box_docs_price;
 
   const pricing_amount_message =
     initial_price - minus > 0
@@ -188,12 +179,10 @@ const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
   const message_text = `
 📱<b>${t("device")}</b>: ${model_name}
 🧠<b>${t("memory")}</b>: ${memory_name}
-✨<b>${t("appearance")}</b>: ${appearance_name}
 📺<b>${t("screen")}</b>: ${screen_name}
 🔋<b>${t("battery")}</b>: ${battery_name}
 🌎<b>${t("country")}</b>: ${country_name}
 📦<b>${t("box")}</b>: ${box_docs}
-🔌<b>${t("cable")}</b>: ${cable}
 💰<b>${t("price")}</b>: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
@@ -204,12 +193,10 @@ ${t("subscribe_prompt")}
 
 📱**${t("device")}**: ${model_name}
 🧠**${t("memory")}**: ${memory_name}
-✨**${t("appearance")}**: ${appearance_name}
 📺**${t("screen")}**: ${screen_name}
 🔋**${t("battery")}**: ${battery_name}
 🌎**${t("country")}**: ${country_name}
 📦**${t("box")}**: ${box_docs}
-🔌**${t("cable")}**: ${cable}
 💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
@@ -335,8 +322,6 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
         model: { name: model_name },
         screen: { name: screen_name, price: screen_price },
         memory: { name: memory_name, price: initial_price },
-        adapter: { name: adapter_name, price: adapter_price },
-        appearance: { name: appearance_name, price: appearance_price },
         battery_capacity: { name: battery_name, percent: battery_percent },
       },
     },
@@ -349,12 +334,7 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
   const box_docs_price = check_command(t("yes"), box_docs) ? 0 : box_minus;
 
   // Calculate minus
-  const minus =
-    screen_price +
-    adapter_price +
-    battery_price +
-    box_docs_price +
-    appearance_price;
+  const minus = screen_price + battery_price + box_docs_price;
 
   const pricing_amount_message =
     initial_price - minus > 0
@@ -365,11 +345,9 @@ const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
   const message_text = `
 💻<b>${t("device")}</b>: ${model_name}
 🧠<b>${t("memory")}</b>: ${memory_name}
-✨<b>${t("appearance")}</b>: ${appearance_name}
 📺<b>${t("screen")}</b>: ${screen_name}
 🔋<b>${t("battery")}</b>: ${battery_name}
 📦<b>${t("box")}</b>: ${box_docs}
-🖲<b>${t("adapter")}</b>: ${adapter_name}
 💰<b>${t("price")}</b>: ${pricing_amount_message}
 
 ${t("subscribe_prompt")}
@@ -380,11 +358,9 @@ ${t("subscribe_prompt")}
 
 💻**${t("device")}**: ${model_name}
 🧠**${t("memory")}**: ${memory_name}
-✨**${t("appearance")}**: ${appearance_name}
 📺**${t("screen")}**: ${screen_name}
 🔋**${t("battery")}**: ${battery_name}
 📦**${t("box")}**: ${box_docs}
-🖲**${t("adapter")}**: ${adapter_name}
 💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message

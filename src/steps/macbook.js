@@ -99,67 +99,11 @@ const macbook_steps = ({
     update_state_name("step_5"); // Update user state name
     update_state_data("screen", screen); // Update user state data
 
-    return send_message(
-      chat_id,
-      t("device_adapter"),
-      k("two_row", device.deductions.accessories.adapters)
-    );
-  }
-
-  // Step 5 (Adapter Selection)
-  if (check_state_name("step_5")) {
-    const adapters = device.deductions.accessories.adapters;
-    const adapter = adapters.find((adapter) => adapter.name === message);
-
-    if (!is_back && !adapter) {
-      return send_message(chat_id, t("invalid_value"), k("two_row", adapters));
-    }
-
-    if (is_back) {
-      return send_message(chat_id, t("device_adapter"), k("two_row", adapters));
-    }
-
-    update_state_name("step_6"); // Update user state name
-    update_state_data("adapter", adapter); // Update user state data
-
-    return send_message(
-      chat_id,
-      t("device_appearance"),
-      k("two_row", device.deductions.appearance)
-    );
-  }
-
-  // Step 6 (Appearance Selection)
-  if (check_state_name("step_6")) {
-    const appearances = device.deductions.appearance;
-    const appearance = appearances.find(
-      (appearance) => appearance.name === message
-    );
-
-    if (!appearance && !is_back) {
-      return send_message(
-        chat_id,
-        t("invalid_value"),
-        k("two_row", appearances)
-      );
-    }
-
-    if (is_back) {
-      return send_message(
-        chat_id,
-        t("device_appearance"),
-        k("two_row", appearances)
-      );
-    }
-
-    update_state_name("step_7"); // Update user state name
-    update_state_data("appearance", appearance); // Update user state data
-
     return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
   }
 
-  // Step 7 (Box Docs Selection)
-  if (check_state_name("step_7")) {
+  // Step 5 (Box Docs Selection)
+  if (check_state_name("step_5")) {
     if (
       !is_back &&
       !check_command(t("no"), message) &&
