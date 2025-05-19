@@ -1,6 +1,6 @@
 require("dotenv").config();
 
 const bot_token = process.env.TOKEN;
-const security_token = process.env.SECURITY_TOKEN;
+const mongodb_url = process.env.MONGODB_URL;
 
-module.exports = { bot_token, security_token };
+module.exports = { bot_token, security_token, mongodb_url };
