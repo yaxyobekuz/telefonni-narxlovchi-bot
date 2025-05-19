@@ -1,11 +1,11 @@
 // Texts
 const texts = require("../texts");
 
-// DataBase
-const { devices, statistics } = require("../db");
-
 // Keyboards
 const keyboards = require("../keyboards");
+
+// DataBase
+const { devices, statistics } = require("../db");
 
 // Hooks
 const use_user_state = require("../hooks/use_user_state");
@@ -29,20 +29,23 @@ const admin_actions = async ({
 
   const {
     get_state_data,
+    clear_state_data,
     check_state_name,
     update_state_data,
     update_state_name,
   } = use_user_state(user);
 
   const state_data = get_state_data();
-  const clearState = () => {
-    user.state.name = null;
-    user.state.data = null;
+
+  const clearState = async () => {
+    clear_state_data();
+    update_state_name(null);
+    return await user.save();
   };
 
   if (check_command("/start", message)) {
     // Clear user state name
-    if (user_state?.name) user_state.name = null;
+    if (user_state?.name) await clearState();
 
     // Send greeting message
     return send_message(chat_id, t("greeting"), k("home"));
@@ -50,7 +53,7 @@ const admin_actions = async ({
 
   // Help
   if (check_command(t("home"), message)) {
-    clearState();
+    await clearState();
     return send_message(chat_id, t("cancel"), k("home"));
   }
 
@@ -82,12 +85,14 @@ const admin_actions = async ({
     send_message(chat_id, t("select_device"), k("two_row", devices));
 
     if (check_command(t("update_device_price"), message)) {
-      return update_state_name("update_price_0"); // Update user state name
+      update_state_name("update_price_0");
     } else if (check_command(t("add_device_model"), message)) {
-      return update_state_name("add_device_model_0"); // Update user state name
+      update_state_name("add_device_model_0");
     } else {
-      return update_state_name("delete_device_model_0"); // Update user state name
+      update_state_name("delete_device_model_0");
     }
+
+    return await user.save();
   }
 
   // Step 0 (Device Selection)
@@ -131,7 +136,7 @@ const admin_actions = async ({
     if (check_state_name("update_price_0")) update_state_name("update_price_1");
     else update_state_name("delete_device_model_1");
 
-    return;
+    return await user.save();
   }
 
   // Step 1 (Model Selection)
@@ -176,7 +181,8 @@ const admin_actions = async ({
       update_state_data("model", { name: model_name, type: model_type });
 
       send_message(chat_id, t("enter_new_price"), k("back_to_home"));
-      return update_state_name("update_price_2"); // Update user state name
+      update_state_name("update_price_2"); // Update user state name
+      return await user.save();
     }
 
     try {
@@ -297,7 +303,8 @@ const admin_actions = async ({
     send_message(chat_id, formatted_device_model_message(), k("back_to_home"));
 
     update_state_data("device_name", device_name); // Update user state data
-    return update_state_name("add_device_model_1"); // Update user state name
+    update_state_name("add_device_model_1"); // Update user state name
+    return await user.save();
   }
 
   // Step 1 (Add model)
