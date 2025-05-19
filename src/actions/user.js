@@ -8,10 +8,12 @@ const {
   send_language_selection_message,
 } = require("../utils");
 const texts = require("../texts");
+const { devices } = require("../db");
+const Stats = require("../models/Stats");
 const keyboards = require("../keyboards");
 const run_steps = require("../steps/index");
-const { devices, statistics } = require("../db");
 const use_user_state = require("../hooks/use_user_state");
+const User = require("../models/User");
 
 const user_actions = async ({
   user,
@@ -21,7 +23,6 @@ const user_actions = async ({
 }) => {
   const user_state = user?.state;
   const user_language = user?.language_code;
-  const user_state_data = user?.state_data;
   const t = (text) => texts[text][user_language];
   const k = (keyboard_name, argument_2) => ({
     reply_markup: {
@@ -36,6 +37,7 @@ const user_actions = async ({
     check_state_name,
     update_state_data,
     update_state_name,
+    clear_state_data,
   } = use_user_state(user);
 
   const state_data = get_state_data();
@@ -67,17 +69,27 @@ const user_actions = async ({
       });
     }
 
-    user.contact = contact.phone_number; // Update user contact
-    statistics.registered_users = statistics.registered_users + 1;
+    // Update stats
+    const stats = await Stats.findOne();
 
-    send_message(chat_id, t("registration_successful"), k("home"));
+    stats.registered_users += 1;
+    await stats.save();
 
-    return update_state_name();
+    // Update user phone (contact)
+    user.phone = contact.phone_number;
+
+    // Update user state
+    update_state_name(null);
+
+    await user.save();
+
+    return send_message(chat_id, t("registration_successful"), k("home"));
   }
 
   // Start
   if (check_command("/start", message)) {
     update_state_name(null);
+    await user.save();
     return send_message(chat_id, t("greeting"), k("home"));
   }
 
@@ -94,13 +106,12 @@ const user_actions = async ({
 
   // Device Pricing Command
   if (check_command(t("pricing"), message)) {
-    // Mandatory membership
     const is_member = await check_user_membership(chat_id);
     if (!is_member) return send_membership_message(chat_id, user_language);
 
-    // Send pricing message
-    send_message(chat_id, t("select_device"), k("two_row", devices));
-    return update_state_name("step_0"); // Update user state name
+    update_state_name("step_0");
+    await user.save();
+    return send_message(chat_id, t("select_device"), k("two_row", devices));
   }
 
   // Back
@@ -108,13 +119,14 @@ const user_actions = async ({
     const step = extract_numbers(String(state_name))[0] - 1;
 
     if (step < 0) {
-      send_message(chat_id, t("cancel"), k("home"));
-
-      user.state.data = {}; // Clear state data
-      return update_state_name(); // Clear user state
+      clear_state_data();
+      update_state_name(null);
+      await user.save();
+      return send_message(chat_id, t("cancel"), k("home"));
     }
 
     update_state_name("step_" + step);
+    await user.save();
   }
 
   // Step 0 (Device Selection)
@@ -129,10 +141,15 @@ const user_actions = async ({
       return send_message(chat_id, t("select_device"), k("two_row", devices));
     }
 
-    send_message(chat_id, t("device_model"), k("two_row", device.models));
+    update_state_name("step_1");
+    update_state_data("device", device);
+    await user.save();
 
-    update_state_name("step_1"); // Update user state name
-    return update_state_data("device", device); // Update user state data
+    return send_message(
+      chat_id,
+      t("device_model"),
+      k("two_row", device.models)
+    );
   }
 
   // Step 1 (Model Selection)
@@ -156,8 +173,9 @@ const user_actions = async ({
       );
     }
 
-    update_state_name("step_2"); // Update user state name
-    update_state_data("model", model); // Update user state data
+    update_state_name("step_2");
+    update_state_data("model", model);
+    await user.save();
 
     if (check_command("AirPods", device.name)) {
       return send_message(
@@ -178,7 +196,7 @@ const user_actions = async ({
     );
   }
 
-  // Other steps (2,3,4...)
+  // Other steps
   if (extract_numbers(state_name)[0] > 0) {
     run_steps({
       t,
@@ -187,10 +205,8 @@ const user_actions = async ({
       chat_id,
       message,
       state_data,
-      user_state,
       get_state_name,
       get_state_data,
-      user_state_data,
       check_state_name,
       update_state_name,
       update_state_data,
