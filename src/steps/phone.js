@@ -4,7 +4,7 @@ const {
   send_phone_pricing_message,
 } = require("../utils");
 
-const phone_steps = ({
+const phone_steps = async ({
   user,
   message,
   chat_id,
@@ -39,8 +39,9 @@ const phone_steps = ({
       );
     }
 
-    update_state_name("step_3"); // Update user state name
-    update_state_data("memory", memory); // Update user state data
+    update_state_name("step_3");
+    update_state_data("memory", memory);
+    await user.save();
 
     return send_message(
       chat_id,
@@ -72,8 +73,9 @@ const phone_steps = ({
       );
     }
 
-    update_state_name("step_4"); // Update user state name
-    update_state_data("battery_capacity", battery); // Update user state data
+    update_state_name("step_4");
+    update_state_data("battery_capacity", battery);
+    await user.save();
 
     return send_message(
       chat_id,
@@ -103,13 +105,14 @@ const phone_steps = ({
       );
     }
 
-    update_state_name("step_5"); // Update user state name
-    update_state_data("screen", screen); // Update user state data
+    update_state_name("step_5");
+    update_state_data("screen", screen);
+    await user.save();
 
     return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
   }
 
-  // Step 6 (Box Docs)
+  // Step 5 (Box Docs)
   if (check_state_name("step_5")) {
     if (
       !is_back &&
@@ -123,8 +126,9 @@ const phone_steps = ({
       return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
     }
 
-    update_state_name("step_6"); // Update user state name
-    update_state_data("box_docs", message); // Update user state data
+    update_state_name("step_6");
+    update_state_data("box_docs", message);
+    await user.save();
 
     return send_message(
       chat_id,
@@ -133,7 +137,7 @@ const phone_steps = ({
     );
   }
 
-  // Step 8 (Country)
+  // Step 6 (Country)
   if (check_state_name("step_6")) {
     const countries = device.deductions.countries;
     const country = countries.find((country) => country.name === message);
@@ -152,9 +156,10 @@ const phone_steps = ({
 
     // Update user state data
     update_state_data("country", country);
+    update_state_name(null);
+    await user.save();
 
-    // Send pricing message
-    send_phone_pricing_message({ k, t, user, update_state_name });
+    send_phone_pricing_message({ t, id: user.chat_id });
   }
 };
 

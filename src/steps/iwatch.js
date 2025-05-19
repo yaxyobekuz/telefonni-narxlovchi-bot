@@ -4,7 +4,7 @@ const {
   send_iwatch_pricing_message,
 } = require("../utils");
 
-const iwatch_steps = ({
+const iwatch_steps = async ({
   user,
   message,
   chat_id,
@@ -30,6 +30,7 @@ const iwatch_steps = ({
 
     update_state_name("step_3"); // Update user state name
     update_state_data("size", size); // Update user state data
+    await user.save();
 
     return send_message(
       chat_id,
@@ -63,6 +64,7 @@ const iwatch_steps = ({
 
     update_state_name("step_4"); // Update user state name
     update_state_data("battery_capacity", battery); // Update user state data
+    await user.save();
 
     return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
   }
@@ -83,6 +85,7 @@ const iwatch_steps = ({
 
     update_state_name("step_5"); // Update user state name
     update_state_data("box_docs", message); // Update user state data
+    await user.save();
 
     return send_message(chat_id, t("device_strap"), k("yes_or_no"));
   }
@@ -103,6 +106,7 @@ const iwatch_steps = ({
 
     update_state_name("step_6"); // Update user state name
     update_state_data("strap", message); // Update user state data
+    await user.save();
 
     return send_message(chat_id, t("device_charger"), k("yes_or_no"));
   }
@@ -123,9 +127,11 @@ const iwatch_steps = ({
 
     // Update user state data
     update_state_data("charger", message);
+    update_state_name(null);
+    await user.save();
 
     // Send pricing message
-    send_iwatch_pricing_message({ k, t, user, update_state_name });
+    send_iwatch_pricing_message({ t, id: user.chat_id });
   }
 };
 

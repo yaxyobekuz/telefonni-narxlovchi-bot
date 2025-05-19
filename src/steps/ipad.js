@@ -4,7 +4,7 @@ const {
   send_ipad_pricing_message,
 } = require("../utils");
 
-const ipad_steps = ({
+const ipad_steps = async ({
   user,
   message,
   chat_id,
@@ -34,6 +34,7 @@ const ipad_steps = ({
 
     update_state_name("step_3"); // Update user state name
     update_state_data("memory", memory); // Update user state data
+    await user.save();
 
     return send_message(
       chat_id,
@@ -67,6 +68,7 @@ const ipad_steps = ({
 
     update_state_name("step_4"); // Update user state name
     update_state_data("battery_capacity", battery); // Update user state data
+    await user.save();
 
     return send_message(
       chat_id,
@@ -100,6 +102,7 @@ const ipad_steps = ({
 
     update_state_name("step_5"); // Update user state name
     update_state_data("appearance", appearance); // Update user state data
+    await user.save();
 
     return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
   }
@@ -120,9 +123,11 @@ const ipad_steps = ({
 
     // Update user state data
     update_state_data("box_docs", message);
+    update_state_name(null);
+    await user.save();
 
     // Send pricing message
-    send_ipad_pricing_message({ k, t, user, update_state_name });
+    send_ipad_pricing_message({ t, id: user.chat_id });
   }
 };
 

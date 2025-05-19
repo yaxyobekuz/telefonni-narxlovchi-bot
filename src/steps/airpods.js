@@ -4,7 +4,7 @@ const {
   send_airpods_pricing_message,
 } = require("../utils");
 
-const airpods_steps = ({
+const airpods_steps = async ({
   user,
   message,
   chat_id,
@@ -43,6 +43,7 @@ const airpods_steps = ({
 
     update_state_name("step_3"); // Update user state name
     update_state_data("status", condition); // Update user state data
+    await user.save();
 
     return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
   }
@@ -63,9 +64,11 @@ const airpods_steps = ({
 
     // Update user state data
     update_state_data("box_docs", message);
+    update_state_name(null);
+    await user.save();
 
     // Send pricing message
-    send_airpods_pricing_message({ k, t, user, update_state_name });
+    send_airpods_pricing_message({ t, id: user.chat_id });
   }
 };
 
