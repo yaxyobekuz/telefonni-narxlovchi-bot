@@ -4,17 +4,17 @@ const bot = require("./bot");
 // Texts
 const texts = require("./texts");
 
+// User schema
+const User = require("./models/User");
+
 // Keyboards
 const keyboards = require("./keyboards");
-
-// Env
-const { security_token } = require("../env.config");
 
 // Hooks
 const use_calculate = require("./hooks/use_calculate");
 
 // DataBase
-const { users, languages, mandatory_channels, statistics } = require("./db");
+const { languages, mandatory_channels, statistics } = require("./db");
 
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
@@ -65,18 +65,21 @@ const check_command = (command_1, command_2) => {
   return command_1.trim().toLowerCase() === command_2.trim().toLowerCase();
 };
 
-const send_request_contact_message = (user_id, language) => {
-  send_message(user_id, texts.request_contact[language], {
+const send_request_contact_message = async (chat_id, language) => {
+  await User.findOneAndUpdate(
+    { chat_id },
+    { state: { name: "awaiting_contact" } }
+  );
+
+  send_message(chat_id, texts.request_contact[language], {
     reply_markup: {
       resize_keyboard: true,
       keyboard: keyboards.user.request_contact(language),
     },
   });
-
-  users[user_id].state.name = "awaiting_contact";
 };
 
-const update_user_language = (user_id, language) => {
+const update_user_language = async (user_id, language) => {
   const new_language = languages.find(({ name }) => name === language);
 
   if (!new_language) {
@@ -95,12 +98,29 @@ const update_user_language = (user_id, language) => {
     );
   }
 
-  users[user_id].language_code = new_language.value; // Update user language
+  // MongoDB orqali user tilini va state.name ni yangilaymiz
+  const user = await User.findOneAndUpdate(
+    { chat_id: user_id },
+    {
+      $set: {
+        "state.name": null,
+        language_code: new_language.value,
+      },
+    },
+    { new: true } // yangilangan hujjatni qaytaradi
+  );
 
-  if (!users[user_id]?.contact) {
+  // Agar user topilmasa
+  if (!user) {
+    return send_message(user_id, "Foydalanuvchi topilmadi! ❌");
+  }
+
+  // Agar contact hali mavjud bo'lmasa
+  if (!user.phone) {
     return send_request_contact_message(user_id, new_language.value);
   }
 
+  // Muvaffaqiyatli holatda til tanlandi
   send_message(
     user_id,
     format_message(
@@ -114,13 +134,16 @@ const update_user_language = (user_id, language) => {
       },
     }
   );
-
-  users[user_id].state.name = null;
 };
 
-const send_language_selection_message = (user_id) => {
+const send_language_selection_message = async (chat_id) => {
+  await User.findOneAndUpdate(
+    { chat_id },
+    { state: { name: "language_selection" } }
+  );
+
   send_message(
-    user_id,
+    chat_id,
     "Iltimos tilni tanlang!\n\nПожалуйста, выберите язык! 👇",
     {
       reply_markup: {
@@ -129,20 +152,18 @@ const send_language_selection_message = (user_id) => {
       },
     }
   );
-
-  users[user_id].state.name = "language_selection";
 };
 
-const send_phone_pricing_message = ({ k, t, user, update_state_name }) => {
-  if (!user) return;
+const send_phone_pricing_message = async ({ t, id }) => {
+  const user = await User.findOne({ chat_id: id });
+
   update_click_stats();
 
   const {
-    id: chat_id,
+    chat_id,
     language_code,
     state: {
       data: {
-        cable,
         box_docs,
         device: {
           deductions: {
@@ -217,17 +238,15 @@ ${t("subscribe_prompt")}
       keyboard: keyboards.user.home(language_code),
     },
   });
-
-  // Clear user state
-  update_state_name();
 };
 
-const send_ipad_pricing_message = ({ k, t, user, update_state_name }) => {
-  if (!user) return;
+const send_ipad_pricing_message = async ({ t, id }) => {
+  const user = await User.findOne({ chat_id: id });
+
   update_click_stats("ipad");
 
   const {
-    id: chat_id,
+    chat_id,
     language_code,
     state: {
       data: {
@@ -299,17 +318,15 @@ ${t("subscribe_prompt")}
       keyboard: keyboards.user.home(language_code),
     },
   });
-
-  // Clear user state
-  update_state_name();
 };
 
-const send_macbook_pricing_message = ({ k, t, user, update_state_name }) => {
-  if (!user) return;
+const send_macbook_pricing_message = async ({ t, id }) => {
+  const user = await User.findOne({ chat_id: id });
+
   update_click_stats("macbook");
 
   const {
-    id: chat_id,
+    chat_id,
     language_code,
     state: {
       data: {
@@ -381,17 +398,15 @@ ${t("subscribe_prompt")}
       keyboard: keyboards.user.home(language_code),
     },
   });
-
-  // Clear user state
-  update_state_name();
 };
 
-const send_iwatch_pricing_message = ({ k, t, user, update_state_name }) => {
-  if (!user) return;
+const send_iwatch_pricing_message = async ({ t, id }) => {
+  const user = await User.findOne({ chat_id: id });
+
   update_click_stats("iwatch");
 
   const {
-    id: chat_id,
+    chat_id,
     language_code,
     state: {
       data: {
@@ -472,17 +487,15 @@ ${t("subscribe_prompt")}
       keyboard: keyboards.user.home(language_code),
     },
   });
-
-  // Clear user state
-  update_state_name();
 };
 
-const send_airpods_pricing_message = ({ k, t, user, update_state_name }) => {
-  if (!user) return;
+const send_airpods_pricing_message = async ({ t, id }) => {
+  const user = await User.findOne({ chat_id: id });
+
   update_click_stats("airpods");
 
   const {
-    id: chat_id,
+    chat_id,
     language_code,
     state: {
       data: {
@@ -548,23 +561,10 @@ ${t("subscribe_prompt")}
       keyboard: keyboards.user.home(language_code),
     },
   });
-
-  // Clear user state
-  update_state_name();
-};
-
-const check_auth = (req, res, next) => {
-  const auth_code = req.query.auth;
-
-  if (auth_code !== security_token) {
-    return res.status(401).json({ error: "Noto'g'ri auth kodi" });
-  }
-  next();
 };
 
 module.exports = {
   isNumber,
-  check_auth,
   send_message,
   check_command,
   format_message,
