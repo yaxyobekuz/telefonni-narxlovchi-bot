@@ -5,10 +5,14 @@ const Stats = require("./src/models/Stats");
 const connectDB = require("./src/config/db");
 const user_actions = require("./src/actions/user");
 const admin_actions = require("./src/actions/admin");
+const setDefaultDevices = require("./src/defaultDevices");
 
 (async () => {
   // Connect mongodb
   await connectDB();
+
+  // Check and set default devices
+  await setDefaultDevices();
 
   // Check stats status
   let stats = await Stats.findOne();
