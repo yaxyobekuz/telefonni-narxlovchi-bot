@@ -1,101 +1,43 @@
-// Bot
 const bot = require("./src/bot");
-
-// Utils
-const { check_auth } = require("./src/utils");
-
-// DataBase
-const { users, admins, statistics } = require("./src/db");
-
-// Actions
+const { admins } = require("./src/db");
+const User = require("./src/models/User");
+const Stats = require("./src/models/Stats");
+const connectDB = require("./src/config/db");
 const user_actions = require("./src/actions/user");
 const admin_actions = require("./src/actions/admin");
 
-// Express (For API)
-const express = require("express");
-const rate_limit = require("express-rate-limit");
-const app = express();
+(async () => {
+  // Connect mongodb
+  await connectDB();
 
-// Message Listener
-bot.on("message", async ({ from, text: message, chat, contact }) => {
-  const chat_id = chat.id;
+  // Check stats status
+  let stats = await Stats.findOne();
 
-  if (!users[chat_id]) {
-    statistics.users = statistics.users + 1;
-    users[chat_id] = { ...from, language_code: null };
+  if (!stats) {
+    stats = new Stats();
+    await stats.save();
   }
 
-  const options = {
-    chat,
-    from,
-    contact,
-    text: message,
-    user: users[chat_id],
-  };
+  // Message Listener
+  bot.on("message", async ({ from, text: message, chat, contact }) => {
+    const chat_id = chat.id;
 
-  if (admins[chat_id]) {
-    admin_actions(options);
-  } else {
-    user_actions(options);
-  }
-});
+    let user = await User.findOne({ chat_id });
 
-// Rate limiting middleware
-const limiter = rate_limit({
-  max: 100,
-  windowMs: 15 * 60 * 1000,
-  message: "Bu IPdan so'rovlar juda ko'p, keyinroq qayta urinib ko'ring.",
-});
+    if (!user) {
+      const stats = await Stats.findOne();
 
-app.use(limiter);
+      stats.users += 1;
+      await stats.save();
 
-// Pagination endpoint
-app.get("/api/data", check_auth, (req, res) => {
-  try {
-    const page_size = 1000;
-    const { page = 1 } = req.query;
-    const page_index = parseInt(page);
-
-    if (isNaN(page_index) || page_index <= 0) {
-      return res
-        .status(400)
-        .json({ error: "Noto'g'ri sahifa raqami kiritildi!" });
+      const newUser = new User({ ...from, chat_id, language_code: null });
+      user = await newUser.save();
     }
 
-    // Extract users and apply pagination
-    const data_keys = Object.keys(users);
-    const total_pages = Math.ceil(data_keys.length / page_size);
+    const isAdmin = admins[chat_id];
+    const options = { chat, user, from, contact, text: message };
 
-    if (page_index > total_pages) {
-      return res
-        .status(400)
-        .json({ error: "Sahifa raqami jami sahifalardan ko'p!" });
-    }
-
-    const start_index = (page_index - 1) * page_size;
-    const paginated_data_keys = data_keys.slice(
-      start_index,
-      start_index + page_size
-    );
-
-    // Prepare paginated response users
-    const paginated_data = {};
-    paginated_data_keys.forEach((key) => {
-      paginated_data[key] = users[key];
-    });
-
-    // Send response with total pages and users
-    res.json({
-      page_index,
-      total_pages,
-      users: paginated_data,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Ichki server xatosi" });
-  }
-});
-
-app.listen(3000, () => {
-  console.log("Server 3000-portda ishga tushdi");
-});
+    if (isAdmin) admin_actions(options);
+    else user_actions(options);
+  });
+})();
