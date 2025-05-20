@@ -8,12 +8,11 @@ const {
   send_language_selection_message,
 } = require("../utils");
 const texts = require("../texts");
-const { devices } = require("../db");
 const Stats = require("../models/Stats");
 const keyboards = require("../keyboards");
+const Device = require("../models/Device");
 const run_steps = require("../steps/index");
 const use_user_state = require("../hooks/use_user_state");
-const User = require("../models/User");
 
 const user_actions = async ({
   user,
@@ -45,7 +44,6 @@ const user_actions = async ({
   const is_back = check_command(t("back"), message);
   const is_awaiting_contact = check_state_name("awaiting_contact");
 
-  // Send language selection message
   if (
     check_command(t("change_language"), message) ||
     (user && !user?.language_code && !check_state_name("language_selection"))
@@ -53,12 +51,10 @@ const user_actions = async ({
     return send_language_selection_message(chat_id);
   }
 
-  // Update language
   if (check_state_name("language_selection")) {
     return update_user_language(chat_id, message);
   }
 
-  // Process contact message
   if (is_awaiting_contact) {
     if (!contact || contact.user_id !== chat_id) {
       return send_message(chat_id, t("invalid_contact"), {
@@ -69,31 +65,24 @@ const user_actions = async ({
       });
     }
 
-    // Update stats
     const stats = await Stats.findOne();
 
     stats.registered_users += 1;
     await stats.save();
 
-    // Update user phone (contact)
     user.phone = contact.phone_number;
-
-    // Update user state
     update_state_name(null);
-
     await user.save();
 
     return send_message(chat_id, t("registration_successful"), k("home"));
   }
 
-  // Start
   if (check_command("/start", message)) {
     update_state_name(null);
     await user.save();
     return send_message(chat_id, t("greeting"), k("home"));
   }
 
-  // Help
   if (check_command(t("help"), message) && !user_state?.name) {
     return send_message(chat_id, t("contact"), {
       parse_mode: "HTML",
@@ -104,17 +93,18 @@ const user_actions = async ({
     });
   }
 
-  // Device Pricing Command
+  // Pricing bosqichi
   if (check_command(t("pricing"), message)) {
     const is_member = await check_user_membership(chat_id);
     if (!is_member) return send_membership_message(chat_id, user_language);
 
     update_state_name("step_0");
     await user.save();
+
+    const devices = await Device.find();
     return send_message(chat_id, t("select_device"), k("two_row", devices));
   }
 
-  // Back
   if (is_back && state_name) {
     const step = extract_numbers(String(state_name))[0] - 1;
 
@@ -129,16 +119,28 @@ const user_actions = async ({
     await user.save();
   }
 
-  // Step 0 (Device Selection)
+  // Step 0: qurilma tanlash
   if (check_state_name("step_0")) {
-    const device = devices.find((device) => device.name === message);
+    const device = await Device.findOne({ name: message });
 
     if (!device && !is_back) {
-      return send_message(chat_id, t("invalid_value"), k("two_row", devices));
+      const all_devices = await Device.find({}, { name: 1, _id: 0 });
+      const device_names = all_devices.map((d) => d.name);
+      return send_message(
+        chat_id,
+        t("invalid_value"),
+        k("two_row", device_names)
+      );
     }
 
     if (is_back) {
-      return send_message(chat_id, t("select_device"), k("two_row", devices));
+      const all_devices = await Device.find({}, { name: 1, _id: 0 });
+      const device_names = all_devices.map((d) => d.name);
+      return send_message(
+        chat_id,
+        t("select_device"),
+        k("two_row", device_names)
+      );
     }
 
     update_state_name("step_1");
@@ -152,7 +154,7 @@ const user_actions = async ({
     );
   }
 
-  // Step 1 (Model Selection)
+  // Step 1: model tanlash
   if (check_state_name("step_1")) {
     const device = get_state_data().device;
     const model = device.models.find((model) => model.name === message);

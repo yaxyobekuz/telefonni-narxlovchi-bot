@@ -15,12 +15,12 @@ const phone_steps = async ({
   update_state_name,
   update_state_data,
 }) => {
-  const device = state_data?.device || {};
+  const { device } = state_data || {};
   const is_back = check_command(t("back"), message);
 
   // Step 2 (Memory Selection)
   if (check_state_name("step_2")) {
-    const model = state_data.model;
+    const { model } = state_data || {};
     const memory = model.storages.find((storage) => storage.name === message);
 
     if (!memory && !is_back) {
@@ -69,7 +69,7 @@ const phone_steps = async ({
       return send_message(
         chat_id,
         t("device_battery_capacity"),
-        k("two_row", device.deductions.battery)
+        k("two_row", battery_capacities)
       );
     }
 
@@ -87,7 +87,7 @@ const phone_steps = async ({
   // Step 4 (Screen Scratch)
   if (check_state_name("step_4")) {
     const screen_scratches = device.deductions.screen;
-    const screen = screen_scratches.find((screen) => screen.name === message);
+    const screen = screen_scratches.find((s) => s.name === message);
 
     if (!screen && !is_back) {
       return send_message(
@@ -101,7 +101,7 @@ const phone_steps = async ({
       return send_message(
         chat_id,
         t("device_screen_scratch"),
-        k("two_row", device.deductions.screen)
+        k("two_row", screen_scratches)
       );
     }
 
@@ -140,7 +140,7 @@ const phone_steps = async ({
   // Step 6 (Country)
   if (check_state_name("step_6")) {
     const countries = device.deductions.countries;
-    const country = countries.find((country) => country.name === message);
+    const country = countries.find((c) => c.name === message);
 
     if (!country && !is_back) {
       return send_message(chat_id, t("invalid_value"), k("two_row", countries));
@@ -150,7 +150,7 @@ const phone_steps = async ({
       return send_message(
         chat_id,
         t("device_country"),
-        k("two_row", device.deductions.countries)
+        k("two_row", countries)
       );
     }
 

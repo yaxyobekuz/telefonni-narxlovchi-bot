@@ -42,11 +42,12 @@ const CountrySchema = new mongoose.Schema({
 });
 
 const DeductionsSchema = new mongoose.Schema({
+  countries: [CountrySchema],
+  accessories: AccessoriesSchema,
   battery: [DeductionPercentSchema],
+  condition: [DeductionPercentSchema],
   screen: [DeductionPercentSchema, DeductionPriceSchema],
   appearance: [DeductionPercentSchema, DeductionPriceSchema],
-  accessories: AccessoriesSchema,
-  countries: [CountrySchema],
 });
 
 const DeviceSchema = new mongoose.Schema({
