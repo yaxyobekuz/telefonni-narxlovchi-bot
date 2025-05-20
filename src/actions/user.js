@@ -124,22 +124,20 @@ const user_actions = async ({
     const device = await Device.findOne({ name: message });
 
     if (!device && !is_back) {
-      const all_devices = await Device.find({}, { name: 1, _id: 0 });
-      const device_names = all_devices.map((d) => d.name);
+      const all_devices = await Device.find();
       return send_message(
         chat_id,
         t("invalid_value"),
-        k("two_row", device_names)
+        k("two_row", all_devices)
       );
     }
 
     if (is_back) {
-      const all_devices = await Device.find({}, { name: 1, _id: 0 });
-      const device_names = all_devices.map((d) => d.name);
+      const all_devices = await Device.find();
       return send_message(
         chat_id,
         t("select_device"),
-        k("two_row", device_names)
+        k("two_row", all_devices)
       );
     }
 
@@ -157,6 +155,7 @@ const user_actions = async ({
   // Step 1: model tanlash
   if (check_state_name("step_1")) {
     const device = get_state_data().device;
+
     const model = device.models.find((model) => model.name === message);
 
     if (!model && !is_back) {

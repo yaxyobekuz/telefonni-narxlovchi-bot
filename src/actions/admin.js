@@ -5,7 +5,8 @@ const texts = require("../texts");
 const keyboards = require("../keyboards");
 
 // DataBase
-const { devices, statistics } = require("../db");
+const Device = require("../models/Device");
+const { statistics } = require("../db");
 
 // Hooks
 const use_user_state = require("../hooks/use_user_state");
@@ -82,6 +83,7 @@ const admin_actions = async ({
       check_command(t("delete_device_model"), message)) &&
     !user_state?.name
   ) {
+    const devices = await Device.find();
     send_message(chat_id, t("select_device"), k("two_row", devices));
 
     if (check_command(t("update_device_price"), message)) {
@@ -95,11 +97,12 @@ const admin_actions = async ({
     return await user.save();
   }
 
-  // Step 0 (Device Selection)
+  // Step 0
   if (
     check_state_name("update_price_0") ||
     check_state_name("delete_device_model_0")
   ) {
+    const devices = await Device.find();
     const device = devices.find((device) => device.name === message);
 
     if (!device) {
@@ -130,9 +133,8 @@ const admin_actions = async ({
       k("two_row", formatted_device_models())
     );
 
-    update_state_data("device", device); // Update user state data
+    update_state_data("device_id", device._id); // MongoDB ID saqlanadi
 
-    // Update user state name
     if (check_state_name("update_price_0")) update_state_name("update_price_1");
     else update_state_name("delete_device_model_1");
 
@@ -144,7 +146,7 @@ const admin_actions = async ({
     check_state_name("update_price_1") ||
     check_state_name("delete_device_model_1")
   ) {
-    const device = state_data?.device;
+    const device = await Device.findById(state_data.device_id);
     const [model_name, model_type] = message?.split(", ") || [];
     const model = device.models.find(({ name }) =>
       check_command(name, model_name)
@@ -177,58 +179,47 @@ const admin_actions = async ({
     }
 
     if (check_state_name("update_price_1")) {
-      // Update user state data
       update_state_data("model", { name: model_name, type: model_type });
-
       send_message(chat_id, t("enter_new_price"), k("back_to_home"));
-      update_state_name("update_price_2"); // Update user state name
+      update_state_name("update_price_2");
       return await user.save();
     }
 
     try {
-      const device_name = device?.name;
-
-      const deviceDB = devices.find(({ name }) =>
-        check_command(name, device?.name)
-      );
-
-      const modelDB = deviceDB.models.find(({ name }) =>
-        check_command(name, model_name)
-      );
-
-      // iWatch
-      if (check_command(device_name, "iwatch")) {
-        if (modelDB?.sizes?.length > 1) {
-          modelDB.sizes = modelDB.sizes.filter(
-            ({ name }) => !check_command(name, model_type)
-          );
-        } else {
-          deviceDB.models = deviceDB.models.filter(
-            ({ name }) => !check_command(name, model_name)
-          );
-        }
-      }
-
-      // AirPods
-      else if (check_command(device_name, "airpods")) {
-        deviceDB.models = deviceDB.models.filter(
-          ({ name }) => !check_command(name, model_name)
+      // Delete model
+      if (check_command(device.name, "iwatch")) {
+        const model = device.models.find((m) =>
+          check_command(m.name, model_name)
         );
-      }
-
-      // Others
-      else {
-        if (modelDB?.storages?.length > 1) {
-          modelDB.storages = modelDB.storages.filter(
-            ({ name }) => !check_command(name, model_type)
+        if (model?.sizes?.length > 1) {
+          model.sizes = model.sizes.filter(
+            (s) => !check_command(s.name, model_type)
           );
         } else {
-          deviceDB.models = deviceDB.models.filter(
-            ({ name }) => !check_command(name, model_name)
+          device.models = device.models.filter(
+            (m) => !check_command(m.name, model_name)
+          );
+        }
+      } else if (check_command(device.name, "airpods")) {
+        device.models = device.models.filter(
+          (m) => !check_command(m.name, model_name)
+        );
+      } else {
+        const model = device.models.find((m) =>
+          check_command(m.name, model_name)
+        );
+        if (model?.storages?.length > 1) {
+          model.storages = model.storages.filter(
+            (s) => !check_command(s.name, model_type)
+          );
+        } else {
+          device.models = device.models.filter(
+            (m) => !check_command(m.name, model_name)
           );
         }
       }
 
+      await device.save();
       send_message(chat_id, t("model_delete_success"), k("home"));
     } catch {
       send_message(chat_id, t("model_delete_error"), k("home"));
@@ -237,56 +228,54 @@ const admin_actions = async ({
     return clearState();
   }
 
-  // Step 2 (Model Type Selection)
+  // Step 2 (Update price)
   if (check_state_name("update_price_2")) {
     const model_storage = state_data?.model;
-    const device_storage = state_data?.device;
+    const device = await Device.findById(state_data?.device_id);
     const amount = Number(message?.replace(/\D/g, ""));
 
     if (typeof amount !== "number" || amount === NaN || amount <= 0) {
       return send_message(chat_id, t("invalid_value"));
     }
 
-    const data = () => {
-      if (check_command(device_storage.name, "iwatch")) {
-        return devices
-          .find((device) => device.name === device_storage.name)
-          .models.find((model) => model.name === model_storage.name)
-          .sizes.find((size) => size.name === model_storage.type);
-      }
-
-      if (check_command(device_storage.name, "AirPods")) {
-        return devices
-          .find((device) => device.name === device_storage.name)
-          .models.find((model) => model.name === model_storage.name);
-      }
-
-      return devices
-        .find((device) => device.name === device_storage.name)
-        .models.find((model) => model.name === model_storage.name)
-        .storages.find((storage) => storage.name === model_storage.type);
-    };
-
     try {
-      data().price = amount;
+      if (check_command(device.name, "iwatch")) {
+        const model = device.models.find((m) => m.name === model_storage.name);
+        const size = model?.sizes?.find((s) => s.name === model_storage.type);
+        if (size) size.price = amount;
+      } else if (check_command(device.name, "airpods")) {
+        const model = device.models.find((m) => m.name === model_storage.name);
+        if (model) model.price = amount;
+      } else {
+        const model = device.models.find((m) => m.name === model_storage.name);
+        const storage = model?.storages?.find(
+          (s) => s.name === model_storage.type
+        );
+        if (storage) storage.price = amount;
+      }
+
+      const res = await device.save();
+
+      console.log(res.models[0]);
+
       send_message(chat_id, t("update_success"), k("home"));
     } catch {
       send_message(chat_id, t("update_error"), k("home"));
     }
 
-    return clearState(); // Clear user state name
+    return clearState();
   }
 
-  // Step 0 (Device Selection For add model)
+  // Step 0 (Add model) – MongoDB moslashtirish
   if (check_state_name("add_device_model_0")) {
-    const device_name = devices
-      .find((device) => device.name === message)
-      ?.name?.toLowerCase()
-      ?.trim();
+    const devices = await Device.find();
+    const device = devices.find((d) => d.name === message);
 
-    if (!device_name) {
+    if (!device) {
       return send_message(chat_id, t("invalid_value"), k("two_row", devices));
     }
+
+    const device_name = device.name.toLowerCase().trim();
 
     const formatted_device_model_message = () => {
       if (check_command(device_name, "iwatch")) {
@@ -301,15 +290,14 @@ const admin_actions = async ({
     };
 
     send_message(chat_id, formatted_device_model_message(), k("back_to_home"));
-
-    update_state_data("device_name", device_name); // Update user state data
-    update_state_name("add_device_model_1"); // Update user state name
+    update_state_data("device_name", device.name);
+    update_state_name("add_device_model_1");
     return await user.save();
   }
 
   // Step 1 (Add model)
   if (check_state_name("add_device_model_1")) {
-    const device_name = state_data.device_name;
+    const device_name = state_data?.device_name;
 
     const data =
       message
@@ -327,77 +315,69 @@ const admin_actions = async ({
       return send_message(chat_id, t("invalid_value"), k("back_to_home"));
     }
 
-    const device = devices.find(({ name }) => check_command(name, device_name));
+    const device = await Device.findOne({
+      name: new RegExp(`^${device_name}$`, "i"),
+    });
+
+    if (!device) {
+      await clearState();
+      return send_message(chat_id, t("invalid_device"), k("home"));
+    }
 
     // iWatch
     if (check_command(device_name, "iwatch")) {
       const [model_name, model_size, price] = data;
-      const model = device.models.find(({ name }) =>
-        check_command(name, model_name)
-      );
+      let model = device.models.find((m) => check_command(m.name, model_name));
 
-      try {
-        if (model) {
-          model.sizes.push({ name: model_size, price: Number(price) });
-        } else {
-          device.models.push({
-            name: model_name,
-            sizes: [{ name: model_size, price: Number(price) }],
-          });
-        }
-
-        send_message(chat_id, t("model_add_success"), k("home"));
-      } catch {
-        send_message(chat_id, t("model_add_error"), k("home"));
+      if (model) {
+        // Model bor, unga yangi size qo‘shamiz
+        model.sizes.push({ name: model_size, price: Number(price) });
+      } else {
+        // Model yo‘q, yangi modelni qo‘shamiz
+        device.models.push({
+          name: model_name,
+          sizes: [{ name: model_size, price: Number(price) }],
+        });
       }
-
-      return clearState();
     }
 
     // AirPods
-    if (check_command(device_name, "airpods")) {
+    else if (check_command(device_name, "airpods")) {
       const [model_name, price] = data;
-      const model = device.models.find(({ name }) =>
-        check_command(name, model_name)
-      );
 
-      try {
-        if (model) {
-          model.price = Number(price);
-        } else {
-          device.models.push({ name: model_name, price: Number(price) });
-        }
-
-        send_message(chat_id, t("model_add_success"), k("home"));
-      } catch {
-        send_message(chat_id, t("model_add_error"), k("home"));
-      }
-
-      return clearState();
+      device.models.push({
+        name: model_name,
+        price: Number(price),
+      });
     }
 
-    // Others
-    const [model_name, model_storage, price] = data;
-    const model = device.models.find(({ name }) =>
-      check_command(name, model_name)
-    );
+    // iPhone, iPad, MacBook
+    else {
+      const [model_name, storage_name, price] = data;
+      let model = device.models.find((m) => check_command(m.name, model_name));
 
-    try {
       if (model) {
-        model.storages.push({ name: model_storage, price: Number(price) });
+        // Model bor, yangi storage qo‘shamiz
+        model.storages.push({ name: storage_name, price: Number(price) });
       } else {
+        // Model yo‘q, yangi modelni qo‘shamiz
         device.models.push({
           name: model_name,
-          storages: [{ name: model_storage, price: Number(price) }],
+          storages: [{ name: storage_name, price: Number(price) }],
         });
       }
-
-      send_message(chat_id, t("model_add_success"), k("home"));
-    } catch {
-      send_message(chat_id, t("model_add_error"), k("home"));
     }
 
-    return clearState();
+    console.log("sakse");
+
+    try {
+      await device.save();
+      await clearState();
+      return send_message(chat_id, t("model_add_success"), k("home"));
+    } catch (err) {
+      console.error(err);
+      return send_message(chat_id, t("model_add_error"), k("home"));
+    }
   }
 };
 
