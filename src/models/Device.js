@@ -37,12 +37,13 @@ const AccessoriesSchema = new mongoose.Schema({
   adapters: [AdaptersSchema],
 });
 
-const CountrySchema = new mongoose.Schema({
+const SimCardSchema = new mongoose.Schema({
   name: String,
 });
 
 const DeductionsSchema = new mongoose.Schema({
-  countries: [CountrySchema],
+  sims: [SimCardSchema],
+  colors: [SimCardSchema],
   accessories: AccessoriesSchema,
   battery: [DeductionPercentSchema],
   condition: [DeductionPercentSchema],
