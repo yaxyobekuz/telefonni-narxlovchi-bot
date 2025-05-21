@@ -167,12 +167,13 @@ const send_phone_pricing_message = async ({ t, id }) => {
         box_docs,
         device: {
           deductions: {
-            countries,
+            sims,
             accessories: { box: box_minus },
           },
         },
+        sim: { name: sim_name },
+        color: { name: color_name },
         model: { name: model_name },
-        country: { name: country_name },
         memory: { name: memory_name, price: initial_price },
         screen: { name: screen_name, percent: screen_percent },
         battery_capacity: { name: battery_name, percent: battery_percent },
@@ -185,11 +186,11 @@ const send_phone_pricing_message = async ({ t, id }) => {
   // Pricing
   const screen_price = calculate_percentage(screen_percent);
   const battery_price = calculate_percentage(battery_percent);
+  const sim_price = check_command(sims[0].name, sim_name) ? 50 : 0;
   const box_docs_price = check_command(t("yes"), box_docs) ? 0 : box_minus;
-  const country_price = check_command(countries[0].name, country_name) ? 0 : 50;
 
   // Calculate minus
-  const minus = screen_price + battery_price + country_price + box_docs_price;
+  const minus = screen_price + battery_price + sim_price + box_docs_price;
 
   const pricing_amount_message =
     initial_price - minus > 0
@@ -201,8 +202,9 @@ const send_phone_pricing_message = async ({ t, id }) => {
 📱<b>${t("device")}</b>: ${model_name}
 🧠<b>${t("memory")}</b>: ${memory_name}
 📺<b>${t("screen")}</b>: ${screen_name}
+🎨<b>${t("color")}</b>: ${color_name}
 🔋<b>${t("battery")}</b>: ${battery_name}
-🌎<b>${t("country")}</b>: ${country_name}
+🌎<b>${t("sim")}</b>: ${sim_name}
 📦<b>${t("box")}</b>: ${box_docs}
 💰<b>${t("price")}</b>: ${pricing_amount_message}
 
@@ -215,8 +217,9 @@ ${t("subscribe_prompt")}
 📱**${t("device")}**: ${model_name}
 🧠**${t("memory")}**: ${memory_name}
 📺**${t("screen")}**: ${screen_name}
+🎨**${t("color")}**: ${color_name}
 🔋**${t("battery")}**: ${battery_name}
-🌎**${t("country")}**: ${country_name}
+🌎**${t("sim")}**: ${sim_name}
 📦**${t("box")}**: ${box_docs}
 💰**${t("price")}**: ${pricing_amount_message}`;
 

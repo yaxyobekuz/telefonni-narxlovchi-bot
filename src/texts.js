@@ -213,11 +213,11 @@ const texts = {
     ru: "🔋 Выберите ёмкость батареи устройства:",
     en: "🔋 Select the battery capacity of the device:",
   },
-  device_country: {
-    uz: "🌎 Qurilma ishlab chiqarilgan davlatni kiriting:",
-    oz: "🌎 Қурилма ишлаб чиқарилган давлатни киритинг:",
-    ru: "🌎 Введите страну производства устройства:",
-    en: "🌎 Enter the country of manufacture of the device:",
+  device_sim: {
+    uz: "💾 Qurilma sim karta turini tanlang:",
+    oz: "💾 Қурилма сим карта турини танланг:",
+    ru: "💾 Выберите тип SIM-карты устройства:",
+    en: "💾 Select the device's SIM card type:",
   },
   device_strap: {
     uz: "⛓️ Qurilma tasmasi bormi?",
@@ -362,6 +362,18 @@ const texts = {
     oz: "Қурилма",
     ru: "Устройство",
     en: "Device",
+  },
+  color: {
+    uz: "Rang",
+    oz: "Ранг",
+    ru: "Цвет",
+    en: "Color",
+  },
+  sim: {
+    uz: "Sim karta",
+    oz: "Сим карта",
+    ru: "SIM-карта",
+    en: "SIM card",
   },
   battery: {
     uz: "Batareya",

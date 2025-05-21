@@ -34,8 +34,12 @@ const setDefaultDevices = require("./src/defaultDevices");
       stats.users += 1;
       await stats.save();
 
-      const newUser = new User({ ...from, chat_id, language_code: null });
-      user = await newUser.save();
+      try {
+        const newUser = new User({ ...from, chat_id, language_code: null });
+        user = await newUser.save();
+      } catch {
+        return console.log("Duplicate key error");
+      }
     }
 
     const isAdmin = admins[chat_id];

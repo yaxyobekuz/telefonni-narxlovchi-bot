@@ -132,30 +132,50 @@ const phone_steps = async ({
 
     return send_message(
       chat_id,
-      t("device_country"),
-      k("two_row", device.deductions.countries)
+      t("device_color"),
+      k("two_row", device.deductions.colors)
     );
   }
 
-  // Step 6 (Country)
+  // Step 6 (Color Selection)
   if (check_state_name("step_6")) {
-    const countries = device.deductions.countries;
-    const country = countries.find((c) => c.name === message);
+    const colors = device.deductions.colors;
+    const color = colors.find((c) => c.name === message);
 
-    if (!country && !is_back) {
-      return send_message(chat_id, t("invalid_value"), k("two_row", countries));
+    if (!color && !is_back) {
+      return send_message(chat_id, t("invalid_value"), k("two_row", colors));
     }
 
     if (is_back) {
-      return send_message(
-        chat_id,
-        t("device_country"),
-        k("two_row", countries)
-      );
+      return send_message(chat_id, t("device_color"), k("two_row", colors));
+    }
+
+    update_state_name("step_7");
+    update_state_data("color", color);
+    await user.save();
+
+    return send_message(
+      chat_id,
+      t("device_sim"),
+      k("two_row", device.deductions.sims)
+    );
+  }
+
+  // Step 7 (Sim)
+  if (check_state_name("step_7")) {
+    const sims = device.deductions.sims;
+    const sim = sims.find((s) => s.name === message);
+
+    if (!sim && !is_back) {
+      return send_message(chat_id, t("invalid_value"), k("two_row", sims));
+    }
+
+    if (is_back) {
+      return send_message(chat_id, t("device_sim"), k("two_row", sims));
     }
 
     // Update user state data
-    update_state_data("country", country);
+    update_state_data("sim", sim);
     update_state_name(null);
     await user.save();
 
