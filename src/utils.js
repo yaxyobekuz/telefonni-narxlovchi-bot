@@ -4,8 +4,9 @@ const bot = require("./bot");
 // Texts
 const texts = require("./texts");
 
-// User schema
+// Schemas
 const User = require("./models/User");
+const Stats = require("./models/Stats");
 
 // Keyboards
 const keyboards = require("./keyboards");
@@ -14,7 +15,7 @@ const keyboards = require("./keyboards");
 const use_calculate = require("./hooks/use_calculate");
 
 // DataBase
-const { languages, mandatory_channels, statistics } = require("./db");
+const { languages, mandatory_channels } = require("./db");
 
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
@@ -43,8 +44,11 @@ const check_user_membership = async (user_id) => {
   return true;
 };
 
-const update_click_stats = (key = "iphone") => {
-  statistics.clicks[key] = statistics.clicks[key] + 1;
+const update_click_stats = async (key = "iphone") => {
+  const statistics = await Stats.findOne();
+  if (!statistics) return;
+  statistics.clicks[key] = (statistics.clicks[key] || 0) + 1;
+  await statistics.save();
 };
 
 const isNumber = (value) => Number.isFinite(value);

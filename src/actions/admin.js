@@ -5,8 +5,8 @@ const texts = require("../texts");
 const keyboards = require("../keyboards");
 
 // DataBase
+const Stats = require("../models/Stats");
 const Device = require("../models/Device");
-const { statistics } = require("../db");
 
 // Hooks
 const use_user_state = require("../hooks/use_user_state");
@@ -60,6 +60,8 @@ const admin_actions = async ({
 
   // Statistics
   if (check_command(t("statistics"), message)) {
+    const statistics = await Stats.find();
+
     let click_stats = "";
 
     Object.keys(statistics.clicks).forEach((name) => {
