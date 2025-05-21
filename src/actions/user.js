@@ -67,7 +67,7 @@ const user_actions = async ({
 
     const stats = await Stats.findOne();
 
-    stats.registered_users += 1;
+    stats.registered_users = (stats.registered_users || 0) + 1;
     await stats.save();
 
     user.phone = contact.phone_number;

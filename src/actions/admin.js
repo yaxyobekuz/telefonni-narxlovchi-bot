@@ -60,10 +60,8 @@ const admin_actions = async ({
 
   // Statistics
   if (check_command(t("statistics"), message)) {
-    const statistics = await Stats.find();
-
+    const statistics = await Stats.findOne();
     let click_stats = "";
-
     Object.keys(statistics.clicks).forEach((name) => {
       click_stats += "\n";
       click_stats += `*${name}:* ${statistics.clicks[name]?.toLocaleString()}`;

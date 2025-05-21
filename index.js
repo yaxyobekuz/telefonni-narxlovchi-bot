@@ -31,7 +31,7 @@ const setDefaultDevices = require("./src/defaultDevices");
     if (!user) {
       const stats = await Stats.findOne();
 
-      stats.users += 1;
+      stats.users = (stats.users || 0) + 1;
       await stats.save();
 
       try {
