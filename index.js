@@ -38,7 +38,7 @@ const setDefaultDevices = require("./src/defaultDevices");
         const newUser = new User({ ...from, chat_id, language_code: null });
         user = await newUser.save();
       } catch {
-        return console.log("Duplicate key error");
+        return;
       }
     }
 

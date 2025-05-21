@@ -254,9 +254,7 @@ const admin_actions = async ({
         if (storage) storage.price = amount;
       }
 
-      const res = await device.save();
-
-      console.log(res.models[0]);
+      await device.save();
 
       send_message(chat_id, t("update_success"), k("home"));
     } catch {

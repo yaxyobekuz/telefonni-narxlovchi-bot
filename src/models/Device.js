@@ -18,12 +18,8 @@ const ModelSchema = new mongoose.Schema({
 
 const DeductionPercentSchema = new mongoose.Schema({
   name: String,
-  percent: Number,
-});
-
-const DeductionPriceSchema = new mongoose.Schema({
-  name: String,
   price: Number,
+  percent: Number,
 });
 
 const AdaptersSchema = new mongoose.Schema({
@@ -45,10 +41,10 @@ const DeductionsSchema = new mongoose.Schema({
   sims: [SimCardSchema],
   colors: [SimCardSchema],
   accessories: AccessoriesSchema,
+  screen: [DeductionPercentSchema],
   battery: [DeductionPercentSchema],
   condition: [DeductionPercentSchema],
-  screen: [DeductionPercentSchema, DeductionPriceSchema],
-  appearance: [DeductionPercentSchema, DeductionPriceSchema],
+  appearance: [DeductionPercentSchema],
 });
 
 const DeviceSchema = new mongoose.Schema({
