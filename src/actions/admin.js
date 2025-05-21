@@ -266,7 +266,7 @@ const admin_actions = async ({
     return clearState();
   }
 
-  // Step 0 (Add model) – MongoDB moslashtirish
+  // Step 0 (Add model
   if (check_state_name("add_device_model_0")) {
     const devices = await Device.find();
     const device = devices.find((d) => d.name === message);
@@ -330,10 +330,8 @@ const admin_actions = async ({
       let model = device.models.find((m) => check_command(m.name, model_name));
 
       if (model) {
-        // Model bor, unga yangi size qo‘shamiz
         model.sizes.push({ name: model_size, price: Number(price) });
       } else {
-        // Model yo‘q, yangi modelni qo‘shamiz
         device.models.push({
           name: model_name,
           sizes: [{ name: model_size, price: Number(price) }],
@@ -357,10 +355,8 @@ const admin_actions = async ({
       let model = device.models.find((m) => check_command(m.name, model_name));
 
       if (model) {
-        // Model bor, yangi storage qo‘shamiz
         model.storages.push({ name: storage_name, price: Number(price) });
       } else {
-        // Model yo‘q, yangi modelni qo‘shamiz
         device.models.push({
           name: model_name,
           storages: [{ name: storage_name, price: Number(price) }],
@@ -368,14 +364,37 @@ const admin_actions = async ({
       }
     }
 
-    console.log("sakse");
+    device.models.sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, {
+        numeric: true,
+        sensitivity: "base",
+      })
+    );
+
+    device.models.forEach((model) => {
+      if (model.storages) {
+        model.storages.sort((x, y) =>
+          x.name.localeCompare(y.name, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          })
+        );
+      }
+      if (model.sizes) {
+        model.sizes.sort((x, y) =>
+          x.name.localeCompare(y.name, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          })
+        );
+      }
+    });
 
     try {
       await device.save();
       await clearState();
       return send_message(chat_id, t("model_add_success"), k("home"));
-    } catch (err) {
-      console.error(err);
+    } catch {
       return send_message(chat_id, t("model_add_error"), k("home"));
     }
   }

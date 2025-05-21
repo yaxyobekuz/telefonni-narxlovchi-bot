@@ -119,7 +119,7 @@ const user_actions = async ({
     await user.save();
   }
 
-  // Step 0: qurilma tanlash
+  // Step 0: Device selection
   if (check_state_name("step_0")) {
     const device = await Device.findOne({ name: message });
 
@@ -152,10 +152,9 @@ const user_actions = async ({
     );
   }
 
-  // Step 1: model tanlash
+  // Step 1: Model selection
   if (check_state_name("step_1")) {
     const device = get_state_data().device;
-
     const model = device.models.find((model) => model.name === message);
 
     if (!model && !is_back) {
