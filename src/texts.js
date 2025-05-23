@@ -171,6 +171,23 @@ const texts = {
     ru: "🧩 Выберите модель устройства:",
     en: "🧩 Select device model:",
   },
+  enter_new_moldel_colors: (colors) => {
+    let colorstext = "";
+    colors.forEach(({ name }, index) => {
+      if (colors.length === index + 1) {
+        colorstext += name;
+      } else {
+        colorstext += `${name}, `;
+      }
+    });
+
+    return {
+      uz: `Qurilma modelini yangi ma'lumotlarini kiriting. Masalan: **Black, Red, Pink** (Hozirgi model ranglari: ${colorstext})`,
+      oz: `Қурилма моделини янги маълумотларини киритинг. Масалан: **Black, Red, Pink** (Ҳозирги модел ранглари: ${colorstext})`,
+      ru: `Введите новые данные модели устройства. Например: **Black, Red, Pink** (Текущие цвета модели: ${colorstext})`,
+      en: `Enter new device model data. For example: **Black, Red, Pink** (Current model colors: ${colorstext})`,
+    };
+  },
   device_memory: {
     uz: "🧠 Qurilmaning xotira hajmini tanlang:",
     oz: "🧠 Қурилманинг хотира ҳажмини танланг:",
@@ -452,6 +469,12 @@ const texts = {
     oz: "Тасма",
     ru: "Ремешок",
     en: "Strap",
+  },
+  update_model_color: {
+    uz: "Qurilma modelini rangini yangilash 🔄",
+    oz: "Қурилма моделини рангини янгилаш 🔄",
+    ru: "Обновить цвет модели устройства 🔄",
+    en: "Update the device model color 🔄",
   },
   statistics: {
     uz: "Statistika 📊",

@@ -80,14 +80,26 @@ const admin_actions = async ({
   if (
     (check_command(t("update_device_price"), message) ||
       check_command(t("add_device_model"), message) ||
+      check_command(t("update_model_color"), message) ||
       check_command(t("delete_device_model"), message)) &&
     !user_state?.name
   ) {
     const devices = await Device.find();
-    send_message(chat_id, t("select_device"), k("two_row", devices));
+
+    if (check_command(t("update_model_color"), message)) {
+      send_message(
+        chat_id,
+        t("select_device"),
+        k("two_row", devices.slice(0, 3))
+      );
+    } else {
+      send_message(chat_id, t("select_device"), k("two_row", devices));
+    }
 
     if (check_command(t("update_device_price"), message)) {
       update_state_name("update_price_0");
+    } else if (check_command(t("update_model_color"), message)) {
+      update_state_name("update_model_color_2");
     } else if (check_command(t("add_device_model"), message)) {
       update_state_name("add_device_model_0");
     } else {
@@ -95,6 +107,64 @@ const admin_actions = async ({
     }
 
     return await user.save();
+  }
+
+  if (check_state_name("update_model_color_2")) {
+    const devices = await Device.find();
+    const device = devices
+      .slice(0, 3)
+      .find((device) => device.name === message);
+
+    if (!device) {
+      return send_message(chat_id, t("invalid_value"), k("two_row", devices));
+    }
+
+    send_message(chat_id, t("device_model"), k("two_row", device.models));
+
+    update_state_data("device", device);
+    update_state_name("update_model_color_3");
+    return await user.save();
+  }
+
+  if (check_state_name("update_model_color_3")) {
+    const models = state_data.device.models;
+    const model = models.find((m) => m.name === message);
+
+    if (!model) {
+      return send_message(chat_id, t("invalid_value"), k("two_row", models));
+    }
+
+    send_message(
+      chat_id,
+      texts.enter_new_moldel_colors(model.colors).uz,
+      k("back_to_home")
+    );
+
+    update_state_data("model", model);
+    update_state_name("update_model_color_4");
+    return await user.save();
+  }
+
+  if (check_state_name("update_model_color_4")) {
+    const { model, device } = state_data;
+
+    const newColors =
+      message?.split(",")?.map((color) => ({
+        name: color?.trim(),
+      })) || [];
+
+    if (!newColors || newColors?.length === 0) {
+      return send_message(chat_id, t("invalid_value"), k("back_to_home"));
+    }
+
+    const deviceDB = await Device.findOne({ name: device.name });
+    const modelDB = deviceDB.models.find((m) => m.name === model.name);
+    modelDB.colors = newColors;
+
+    send_message(chat_id, t("update_success"), k("home"));
+
+    clearState();
+    return await deviceDB.save();
   }
 
   // Step 0
@@ -133,7 +203,7 @@ const admin_actions = async ({
       k("two_row", formatted_device_models())
     );
 
-    update_state_data("device_id", device._id); // MongoDB ID saqlanadi
+    update_state_data("device_id", device._id);
 
     if (check_state_name("update_price_0")) update_state_name("update_price_1");
     else update_state_name("delete_device_model_1");

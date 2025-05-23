@@ -96,6 +96,7 @@ const keyboards = {
     two_row: (data) => admin_two_row(data),
     home: () => [
       [{ text: texts.update_device_price.uz }],
+      [{ text: texts.update_model_color.uz }],
       [{ text: texts.add_device_model.uz }],
       [{ text: texts.delete_device_model.uz }],
       [{ text: texts.statistics.uz }],
