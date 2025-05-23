@@ -237,6 +237,26 @@ const setDefaultDevices = async () => {
           ],
         },
       ],
+      deductions: {
+        battery: [
+          { name: "90-100%", percent: 5 },
+          { name: "80-90%", percent: 10 },
+          { name: "70-80%", percent: 15 },
+        ],
+        screen: [
+          { name: "0-10%", percent: 3 },
+          { name: "10-20%", percent: 7 },
+          { name: "20-30%", percent: 10 },
+          { name: "30-100%", percent: 15 },
+        ],
+        appearance: [
+          { name: "90-100%", percent: 3 },
+          { name: "80-90%", percent: 7 },
+          { name: "70-80%", percent: 10 },
+        ],
+        accessories: { box: 50, cable: 10 },
+        sims: [{ name: "E-sim" }, { name: "1-sim" }, { name: "Dual-sim" }],
+      },
     },
     {
       name: "MacBook",
