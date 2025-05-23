@@ -263,6 +263,7 @@ const send_ipad_pricing_message = async ({ t, id }) => {
             accessories: { box: box_minus },
           },
         },
+        color: { name: color_name },
         model: { name: model_name },
         memory: { name: memory_name, price: initial_price },
         appearance: { name: appearance_name, price: appearance_price },
@@ -290,6 +291,7 @@ const send_ipad_pricing_message = async ({ t, id }) => {
 📱<b>${t("device")}</b>: ${model_name}
 🧠<b>${t("memory")}</b>: ${memory_name}
 ✨<b>${t("appearance")}</b>: ${appearance_name}
+🎨<b>${t("color")}</b>: ${color_name}
 🔋<b>${t("battery")}</b>: ${battery_name}
 📦<b>${t("box")}</b>: ${box_docs}
 💰<b>${t("price")}</b>: ${pricing_amount_message}
@@ -303,6 +305,7 @@ ${t("subscribe_prompt")}
 📱**${t("device")}**: ${model_name}
 🧠**${t("memory")}**: ${memory_name}
 ✨**${t("appearance")}**: ${appearance_name}
+🎨**${t("color")}**: ${color_name}
 🔋**${t("battery")}**: ${battery_name}
 📦**${t("box")}**: ${box_docs}
 💰**${t("price")}**: ${pricing_amount_message}`;
@@ -344,6 +347,7 @@ const send_macbook_pricing_message = async ({ t, id }) => {
           },
         },
         model: { name: model_name },
+        color: { name: color_name },
         screen: { name: screen_name, price: screen_price },
         memory: { name: memory_name, price: initial_price },
         battery_capacity: { name: battery_name, percent: battery_percent },
@@ -371,6 +375,7 @@ const send_macbook_pricing_message = async ({ t, id }) => {
 🧠<b>${t("memory")}</b>: ${memory_name}
 📺<b>${t("screen")}</b>: ${screen_name}
 🔋<b>${t("battery")}</b>: ${battery_name}
+🎨<b>${t("color")}</b>: ${color_name}
 📦<b>${t("box")}</b>: ${box_docs}
 💰<b>${t("price")}</b>: ${pricing_amount_message}
 
@@ -384,6 +389,7 @@ ${t("subscribe_prompt")}
 🧠**${t("memory")}**: ${memory_name}
 📺**${t("screen")}**: ${screen_name}
 🔋**${t("battery")}**: ${battery_name}
+🎨**${t("color")}**: ${color_name}
 📦**${t("box")}**: ${box_docs}
 💰**${t("price")}**: ${pricing_amount_message}`;
 

@@ -121,7 +121,31 @@ const macbook_steps = async ({
 
     // Update user state data
     update_state_data("box_docs", message);
+    update_state_name("step_6");
+    await user.save();
+
+    return send_message(
+      chat_id,
+      t("device_color"),
+      k("two_row", state_data.model.colors)
+    );
+  }
+
+  // Step 6 (Color Selection)
+  if (check_state_name("step_6")) {
+    const colors = state_data.model.colors;
+    const color = colors.find((c) => c.name === message);
+
+    if (!color && !is_back) {
+      return send_message(chat_id, t("invalid_value"), k("two_row", colors));
+    }
+
+    if (is_back) {
+      return send_message(chat_id, t("device_color"), k("two_row", colors));
+    }
+
     update_state_name(null);
+    update_state_data("color", color);
     await user.save();
 
     // Send pricing message

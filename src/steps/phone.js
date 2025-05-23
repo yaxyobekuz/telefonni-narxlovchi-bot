@@ -126,6 +126,7 @@ const phone_steps = async ({
       return send_message(chat_id, t("device_box_docs"), k("yes_or_no"));
     }
 
+    // Update user state data
     update_state_name("step_6");
     update_state_data("box_docs", message);
     await user.save();
@@ -133,13 +134,13 @@ const phone_steps = async ({
     return send_message(
       chat_id,
       t("device_color"),
-      k("two_row", device.deductions.colors)
+      k("two_row", state_data.model.colors)
     );
   }
 
   // Step 6 (Color Selection)
   if (check_state_name("step_6")) {
-    const colors = device.deductions.colors;
+    const colors = state_data.model.colors;
     const color = colors.find((c) => c.name === message);
 
     if (!color && !is_back) {
