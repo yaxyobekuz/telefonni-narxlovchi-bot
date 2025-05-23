@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 
-const StorageSchema = new mongoose.Schema({
+const NameSchema = new mongoose.Schema({
   name: String,
-  price: Number,
 });
 
-const SizeSchema = new mongoose.Schema({
+const PriceSchema = new mongoose.Schema({
   name: String,
   price: Number,
 });
 
 const ModelSchema = new mongoose.Schema({
   name: String,
-  storages: [StorageSchema],
-  sizes: [SizeSchema],
+  sizes: [PriceSchema],
+  colors: [NameSchema],
+  storages: [PriceSchema],
 });
 
 const DeductionPercentSchema = new mongoose.Schema({
@@ -22,24 +22,14 @@ const DeductionPercentSchema = new mongoose.Schema({
   percent: Number,
 });
 
-const AdaptersSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-});
-
 const AccessoriesSchema = new mongoose.Schema({
   box: Number,
   cable: Number,
-  adapters: [AdaptersSchema],
-});
-
-const SimCardSchema = new mongoose.Schema({
-  name: String,
+  adapters: [PriceSchema],
 });
 
 const DeductionsSchema = new mongoose.Schema({
-  sims: [SimCardSchema],
-  colors: [SimCardSchema],
+  sims: [NameSchema],
   accessories: AccessoriesSchema,
   screen: [DeductionPercentSchema],
   battery: [DeductionPercentSchema],
