@@ -222,7 +222,7 @@ const send_phone_pricing_message = async ({ t, id }) => {
 
 ${t("subscribe_prompt")}
 
-<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
+<a href="https://t.me/+vBZKzC7p7rMzMmY6">Telegram</a> | <a href="https://www.instagram.com/smartlife_uz">Instagram</a>`;
 
   const share_text = `
 
@@ -306,7 +306,7 @@ const send_ipad_pricing_message = async ({ t, id }) => {
 
 ${t("subscribe_prompt")}
 
-<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
+<a href="https://t.me/+vBZKzC7p7rMzMmY6">Telegram</a> | <a href="https://www.instagram.com/smartlife_uz">Instagram</a>`;
 
   const share_text = `
 
@@ -389,7 +389,7 @@ const send_macbook_pricing_message = async ({ t, id }) => {
 
 ${t("subscribe_prompt")}
 
-<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
+<a href="https://t.me/+vBZKzC7p7rMzMmY6">Telegram</a> | <a href="https://www.instagram.com/smartlife_uz">Instagram</a>`;
 
   const share_text = `
 
@@ -478,7 +478,7 @@ const send_iwatch_pricing_message = async ({ t, id }) => {
 
 ${t("subscribe_prompt")}
 
-<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
+<a href="https://t.me/+vBZKzC7p7rMzMmY6">Telegram</a> | <a href="https://www.instagram.com/smartlife_uz">Instagram</a>`;
 
   const share_text = `
 
@@ -555,7 +555,7 @@ const send_airpods_pricing_message = async ({ t, id }) => {
 
 ${t("subscribe_prompt")}
 
-<a href="https://t.me/macbrouz">Telegram</a> | <a href="https://instagram.com/macbro.uz">Instagram</a>`;
+<a href="https://t.me/+vBZKzC7p7rMzMmY6">Telegram</a> | <a href="https://www.instagram.com/smartlife_uz">Instagram</a>`;
 
   const share_text = `
 

@@ -58,10 +58,10 @@ const texts = {
     };
   },
   contact: {
-    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAdmin: @Abushakhin_Izzat",
-    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАдмин: @Abushakhin_Izzat",
-    ru: "Для получения помощи напишите следующему администратору 👇\nАдмин: @Abushakhin_Izzat",
-    en: "For assistance, write to the following admin 👇\nAdmin: @Abushakhin_Izzat",
+    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAdmin: @shoxjaxon_smartlife\nTelefon: +998555007707",
+    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАдмин: @shoxjaxon_smartlife\nТелефон: +998555007707",
+    ru: "Для получения помощи напишите следующему администратору 👇\nАдмин: @shoxjaxon_smartlife\nТелефон: +998555007707",
+    en: "For assistance, write to the following admin 👇\nAdmin: @shoxjaxon_smartlife\nPhone: +998555007707",
   },
   help: {
     uz: "Yordam olish ☎️",
@@ -345,10 +345,10 @@ const texts = {
     en: "» Share «",
   },
   contact_admin: {
-    uz: "Agar qurilmangizni sotmoqchi bo'lsangiz @Abushakhin_Izzat ga murojaat qiling! 😊",
-    oz: "Агар қурилмангизни сотмоқчи бўлсангиз @Abushakhin_Izzat га мурожаат қилинг! 😊",
-    ru: "Если вы хотите продать своё устройство, свяжитесь с @Abushakhin_Izzat! 😊",
-    en: "If you want to sell your device, contact @Abushakhin_Izzat! 😊",
+    uz: "Agar qurilmangizni sotmoqchi bo'lsangiz @shoxjaxon_smartlife ga murojaat qiling! 😊\nTelefon: +998555007707",
+    oz: "Агар қурилмангизни сотмоқчи бўлсангиз @shoxjaxon_smartlife га мурожаат қилинг! 😊\nТелефон: +998555007707",
+    ru: "Если вы хотите продать своё устройство, свяжитесь с @shoxjaxon_smartlife! 😊\nТелефон: +998555007707",
+    en: "If you want to sell your device, contact @shoxjaxon_smartlife! 😊\nPhone: +998555007707",
   },
   admin: {
     uz: "» Admin «",

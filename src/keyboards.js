@@ -88,7 +88,7 @@ const keyboards = {
       ];
     },
     admin: (language) => [
-      [{ text: texts.admin[language], url: "https://t.me/Abushakhin_Izzat" }],
+      [{ text: texts.admin[language], url: "https://t.me/shoxjaxon_smartlife" }],
     ],
   },
   admin: {
