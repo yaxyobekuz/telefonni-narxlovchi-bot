@@ -190,8 +190,16 @@ const send_phone_pricing_message = async ({ t, id }) => {
   // Pricing
   const screen_price = calculate_percentage(screen_percent);
   const battery_price = calculate_percentage(battery_percent);
-  const sim_price = check_command(sims[0].name, sim_name) ? 50 : 0;
   const box_docs_price = check_command(t("yes"), box_docs) ? 0 : box_minus;
+  const sim_price = (() => {
+    if (
+      model_name?.toLowerCase()?.startsWith("iphone") &&
+      extract_numbers(model_name)?.[0] < 14
+    )
+      return 0;
+
+    return check_command(sims[0].name, sim_name) ? 50 : 0;
+  })();
 
   // Calculate minus
   const minus = screen_price + battery_price + sim_price + box_docs_price;
