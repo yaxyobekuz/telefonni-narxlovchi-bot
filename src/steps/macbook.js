@@ -38,7 +38,7 @@ const macbook_steps = async ({
 
     return send_message(
       chat_id,
-      t("device_battery_capacity"),
+      t("device_battery_capacity_for_mac"),
       k("two_row", device.deductions.battery)
     );
   }
@@ -61,7 +61,7 @@ const macbook_steps = async ({
     if (is_back) {
       return send_message(
         chat_id,
-        t("device_battery_capacity"),
+        t("device_battery_capacity_for_mac"),
         k("two_row", battery_capacities)
       );
     }

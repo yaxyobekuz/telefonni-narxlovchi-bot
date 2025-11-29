@@ -20,9 +20,12 @@ const { languages, mandatory_channels } = require("./db");
 const format_message = (title, description) => `*${title}*\n\n${description}`;
 const extract_numbers = (text = "") => text?.match(/-?\d+/g)?.map(Number) || [];
 
-const send_message = (chat_id, text, options) => {
+const send_message = async (chat_id, text, options) => {
   try {
-    bot.sendMessage(chat_id, text, { parse_mode: "Markdown", ...options });
+    await bot.sendMessage(chat_id, text, {
+      parse_mode: "Markdown",
+      ...options,
+    });
   } catch {
     console.log("Xabarni yuborib bo'lmadi! Foydalanuvchi: " + chat_id);
   }
@@ -236,7 +239,7 @@ ${t("subscribe_prompt")}
 💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
-  send_message(chat_id, message_text, {
+  await send_message(chat_id, message_text, {
     parse_mode: "HTML",
     disable_web_page_preview: true,
     reply_markup: {
@@ -319,7 +322,7 @@ ${t("subscribe_prompt")}
 💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
-  send_message(chat_id, message_text, {
+  await send_message(chat_id, message_text, {
     parse_mode: "HTML",
     disable_web_page_preview: true,
     reply_markup: {
@@ -402,7 +405,7 @@ ${t("subscribe_prompt")}
 💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
-  send_message(chat_id, message_text, {
+  await send_message(chat_id, message_text, {
     parse_mode: "HTML",
     disable_web_page_preview: true,
     reply_markup: {
@@ -491,7 +494,7 @@ ${t("subscribe_prompt")}
 💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
-  send_message(chat_id, message_text, {
+  await send_message(chat_id, message_text, {
     parse_mode: "HTML",
     disable_web_page_preview: true,
     reply_markup: {
@@ -565,7 +568,7 @@ ${t("subscribe_prompt")}
 💰**${t("price")}**: ${pricing_amount_message}`;
 
   // Send message
-  send_message(chat_id, message_text, {
+  await send_message(chat_id, message_text, {
     parse_mode: "HTML",
     disable_web_page_preview: true,
     reply_markup: {

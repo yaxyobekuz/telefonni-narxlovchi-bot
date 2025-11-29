@@ -58,10 +58,10 @@ const texts = {
     };
   },
   contact: {
-    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAdmin: @shoxjaxon_smartlife\nTelefon: +998555007707",
-    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАдмин: @shoxjaxon_smartlife\nТелефон: +998555007707",
-    ru: "Для получения помощи напишите следующему администратору 👇\nАдмин: @shoxjaxon_smartlife\nТелефон: +998555007707",
-    en: "For assistance, write to the following admin 👇\nAdmin: @shoxjaxon_smartlife\nPhone: +998555007707",
+    uz: "Yordam olish uchun quyidagi adminga yozing 👇\nAloqa markazi: @shoxjaxon_smartlife\nTelefon: +998555007707",
+    oz: "Ёрдам олиш учун қуйидаги админга ёзинг 👇\nАлоқа маркази: @shoxjaxon_smartlife\nТелефон: +998555007707",
+    ru: "Для получения помощи напишите следующему администратору 👇\nКолл-центр: @shoxjaxon_smartlife\nТелефон: +998555007707",
+    en: "For assistance, write to the following admin 👇\nCall Center: @shoxjaxon_smartlife\nPhone: +998555007707",
   },
   help: {
     uz: "Yordam olish ☎️",
@@ -106,10 +106,10 @@ const texts = {
     en: "*Error* ❌\n\nInvalid response entered. Please try again.",
   },
   invalid_battery: {
-    uz: "*Xatolik* ❌\n\nNoto'g'ri batareya sig'imi kiritildi. Iltimos, qaytadan urinib ko'ring.",
-    oz: "*Хатолик* ❌\n\nНотўғри батарея сиғими киритилди. Илтимос, қайтадан уриниб кўринг.",
-    ru: "*Ошибка* ❌\n\nВведена неверная ёмкость батареи. Пожалуйста, попробуйте снова.",
-    en: "*Error* ❌\n\nIncorrect battery capacity entered. Please try again.",
+    uz: "*Xatolik* ❌\n\nNoto'g'ri batareya qiymati kiritildi. Iltimos, qaytadan urinib ko'ring.",
+    oz: "*Хатолик* ❌\n\nНотўғри батарея қиймати киритилди. Илтимос, қайтадан уриниб кўринг.",
+    ru: "*Ошибка* ❌\n\nВведено неверное значение батареи. Пожалуйста, попробуйте снова.",
+    en: "*Error* ❌\n\nIncorrect battery value entered. Please try again.",
   },
   invalid_color: {
     uz: "*Xatolik* ❌\n\nNoto'g'ri rang kiritildi. Iltimos, qaytadan urinib ko'ring.",
@@ -229,6 +229,12 @@ const texts = {
     oz: "🔋 Қурилма батареясининг сиғимини танланг:",
     ru: "🔋 Выберите ёмкость батареи устройства:",
     en: "🔋 Select the battery capacity of the device:",
+  },
+  device_battery_capacity_for_mac: {
+    uz: "🔋 Qurilma batareyasining sikl sonini tanlang:",
+    oz: "🔋 Қурилма батареясининг сикл сонини танланг:",
+    ru: "🔋 Выберите количество цикл батареи устройства:",
+    en: "🔋 Select the battery cycle count of the device:",
   },
   device_sim: {
     uz: "💾 Qurilma sim karta turini tanlang:",
