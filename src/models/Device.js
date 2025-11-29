@@ -11,6 +11,7 @@ const PriceSchema = new mongoose.Schema({
 
 const ModelSchema = new mongoose.Schema({
   name: String,
+  price: Number,
   sizes: [PriceSchema],
   colors: [NameSchema],
   storages: [PriceSchema],
