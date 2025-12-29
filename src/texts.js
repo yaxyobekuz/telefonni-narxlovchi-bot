@@ -159,6 +159,12 @@ const texts = {
     ru: "Действие отменено ❌",
     en: "Action Cancelled ❌",
   },
+  unknown_command: {
+    uz: "Sizni tushunmadim, nima dedingiz? 🤔",
+    oz: "Сизни тушунмадим, нима дедингиз? 🤔",
+    ru: "Я вас не понял, что вы сказали? 🤔",
+    en: "I didn't understand you, what did you say? 🤔",
+  },
   select_device: {
     uz: "📱 Qurilmalardan birini tanlang:",
     oz: "📱 Қурилмалардан бирини танланг:",

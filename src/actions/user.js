@@ -211,6 +211,8 @@ const user_actions = async ({
       update_state_name,
       update_state_data,
     });
+  } else {
+    return send_message(chat_id, t("unknown_command"), k("home"));
   }
 };
 
