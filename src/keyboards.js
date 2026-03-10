@@ -99,6 +99,7 @@ const keyboards = {
       [{ text: texts.update_model_color.uz }],
       [{ text: texts.add_device_model.uz }],
       [{ text: texts.delete_device_model.uz }],
+      [{ text: texts.broadcast_send.uz }],
       [{ text: texts.statistics.uz }],
       [{ text: texts.export_users_excel.uz }],
       [{ text: texts.export_user_events_excel.uz }],

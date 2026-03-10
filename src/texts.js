@@ -512,6 +512,42 @@ const texts = {
     ru: "Удалить модель устройства 🗑",
     en: "Delete device model 🗑",
   },
+  broadcast_send: {
+    uz: "Reklama yuborish 📣",
+    oz: "Реклама юбориш 📣",
+    ru: "Отправить рекламу 📣",
+    en: "Send broadcast 📣",
+  },
+  broadcast_enter_forward: {
+    uz: "Reklama uchun bitta xabarni forward qiling.",
+    oz: "Реклама учун битта хабарни forward қилинг.",
+    ru: "Перешлите одно сообщение для рассылки.",
+    en: "Forward one message for broadcast.",
+  },
+  broadcast_invalid_forward: {
+    uz: "Noto'g'ri format. Iltimos, reklama uchun xabarni forward qiling.",
+    oz: "Нотўғри формат. Илтимос, реклама учун хабарни forward қилинг.",
+    ru: "Неверный формат. Пожалуйста, перешлите сообщение для рассылки.",
+    en: "Invalid format. Please forward a message for broadcast.",
+  },
+  broadcast_busy: {
+    uz: "Ayni paytda reklama yuborish jarayoni ketmoqda. Tugashini kuting.",
+    oz: "Айни пайтда реклама юбориш жараёни кетмоқда. Тугашини кутинг.",
+    ru: "Сейчас идет рассылка. Дождитесь завершения.",
+    en: "Broadcast is already running. Please wait until it finishes.",
+  },
+  broadcast_in_progress: {
+    uz: "Reklama yuborish boshlandi. Jarayon tugaguncha kuting...",
+    oz: "Реклама юбориш бошланди. Жараён тугагунча кутинг...",
+    ru: "Рассылка началась. Пожалуйста, дождитесь завершения...",
+    en: "Broadcast has started. Please wait for completion...",
+  },
+  broadcast_complete: {
+    uz: "Reklama yuborish yakunlandi ✅",
+    oz: "Реклама юбориш якунланди ✅",
+    ru: "Рассылка завершена ✅",
+    en: "Broadcast completed ✅",
+  },
   export_users_excel: {
     uz: "Foydalanuvchilarni Excelga yuklash 📥",
     oz: "Фойдаланувчиларни Excelга юклаш 📥",
