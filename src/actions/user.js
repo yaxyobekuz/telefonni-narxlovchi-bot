@@ -105,6 +105,17 @@ const user_actions = async ({
     return send_message(chat_id, t("select_device"), k("two_row", devices));
   }
 
+  // MacBook: model tanlash qadamida "Back" → tur tanlash qadamiga qaytish
+  if (is_back && check_state_name("step_1") && state_data.mac_type) {
+    const device = state_data.device;
+    const types = [
+      ...new Set(device.models.map((m) => m.name.split(" ")[1])),
+    ].map((type) => ({ name: type }));
+    update_state_data("mac_type", null);
+    await user.save();
+    return send_message(chat_id, t("device_model_type"), k("two_row", types));
+  }
+
   if (is_back && state_name) {
     const step = extract_numbers(String(state_name))[0] - 1;
 
@@ -145,6 +156,13 @@ const user_actions = async ({
     update_state_data("device", device);
     await user.save();
 
+    if (check_command("macbook", device.name)) {
+      const types = [
+        ...new Set(device.models.map((m) => m.name.split(" ")[1])),
+      ].map((type) => ({ name: type }));
+      return send_message(chat_id, t("device_model_type"), k("two_row", types));
+    }
+
     return send_message(
       chat_id,
       t("device_model"),
@@ -152,16 +170,61 @@ const user_actions = async ({
     );
   }
 
-  // Step 1: Model selection
+  // Step 1: Model type selection (MacBook only) + Model selection
   if (check_state_name("step_1")) {
     const device = get_state_data().device;
-    const model = device.models.find((model) => model.name === message);
+    const isMacBook = check_command("macbook", device.name);
+
+    const types = isMacBook
+      ? [...new Set(device.models.map((m) => m.name.split(" ")[1]))].map(
+          (type) => ({ name: type })
+        )
+      : [];
+
+    // MacBook: type not yet selected → type selection phase
+    if (isMacBook && !state_data.mac_type) {
+      const selectedType = types.find((t) => t.name === message);
+
+      if (!selectedType && !is_back) {
+        return send_message(
+          chat_id,
+          t("invalid_value"),
+          k("two_row", types)
+        );
+      }
+
+      if (is_back) {
+        return send_message(
+          chat_id,
+          t("device_model_type"),
+          k("two_row", types)
+        );
+      }
+
+      update_state_data("mac_type", selectedType.name);
+      await user.save();
+
+      const filtered = device.models
+        .filter((m) => m.name.split(" ")[1] === selectedType.name)
+        .map((m) => ({ name: m.name }));
+
+      return send_message(chat_id, t("device_model"), k("two_row", filtered));
+    }
+
+    // MacBook: type already selected → show filtered models
+    const available_models = isMacBook && state_data.mac_type
+      ? device.models.filter(
+          (m) => m.name.split(" ")[1] === state_data.mac_type
+        )
+      : device.models;
+
+    const model = available_models.find((model) => model.name === message);
 
     if (!model && !is_back) {
       return send_message(
         chat_id,
         t("invalid_value"),
-        k("two_row", device.models)
+        k("two_row", available_models)
       );
     }
 
@@ -169,7 +232,7 @@ const user_actions = async ({
       return send_message(
         chat_id,
         t("device_model"),
-        k("two_row", device.models)
+        k("two_row", available_models)
       );
     }
 
