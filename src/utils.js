@@ -27,8 +27,38 @@ const send_message = async (chat_id, text, options) => {
       parse_mode: "Markdown",
       ...options,
     });
+  } catch (error) {
+    const description =
+      error?.response?.body?.description || error?.message || "Noma'lum xatolik";
+    console.log(
+      "Xabarni yuborib bo'lmadi! Foydalanuvchi:",
+      chat_id,
+      "Sabab:",
+      description
+    );
+  }
+};
+
+const send_document = async (chat_id, document, options = {}) => {
+  const {
+    filename = "export.xlsx",
+    contentType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ...telegram_options
+  } = options;
+
+  try {
+    if (Buffer.isBuffer(document)) {
+      await bot.sendDocument(chat_id, document, telegram_options, {
+        filename,
+        contentType,
+      });
+      return;
+    }
+
+    await bot.sendDocument(chat_id, document, telegram_options);
   } catch {
-    console.log("Xabarni yuborib bo'lmadi! Foydalanuvchi: " + chat_id);
+    console.log("Faylni yuborib bo'lmadi! Foydalanuvchi: " + chat_id);
   }
 };
 
@@ -129,6 +159,7 @@ const persist_pricing_event = async ({
   const user_snapshot = {
     chat_id: user?.chat_id || null,
     first_name: user?.first_name || null,
+    username: user?.username || null,
     phone: user?.phone || null,
     language_code: user?.language_code || null,
     state_data: state_data_snapshot,
@@ -881,6 +912,7 @@ ${t("subscribe_prompt")}
 module.exports = {
   isNumber,
   send_message,
+  send_document,
   check_command,
   format_message,
   extract_numbers,
