@@ -194,6 +194,12 @@ const texts = {
       en: `Enter new device model data. For example: **Black, Red, Pink** (Current model colors: ${colorstext})`,
     };
   },
+  device_model_type: {
+    uz: "📦 Model turini tanlang:",
+    oz: "📦 Модел турини танланг:",
+    ru: "📦 Выберите тип модели:",
+    en: "📦 Select model type:",
+  },
   device_memory: {
     uz: "🧠 Qurilmaning xotira hajmini tanlang:",
     oz: "🧠 Қурилманинг хотира ҳажмини танланг:",
