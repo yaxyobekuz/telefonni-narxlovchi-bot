@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  username: {
+    default: null,
+    type: String,
+  },
   phone: {
     default: null,
     type: String,
