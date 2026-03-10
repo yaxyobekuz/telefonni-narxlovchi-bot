@@ -1,5 +1,6 @@
 // Texts
 const texts = require("../texts");
+const bot = require("../bot");
 
 // Keyboards
 const keyboards = require("../keyboards");
@@ -30,6 +31,13 @@ const EXPORT_COOLDOWN_BY_ACTION = {
   events_export: 60 * 1000,
 };
 const export_limiter = new Map();
+const BROADCAST_SLEEP_MS = 200;
+const broadcast_lock = {
+  in_progress: false,
+  started_by: null,
+  started_at: null,
+  total_users: 0,
+};
 
 const get_limiter_key = (admin_chat_id, action_name) =>
   `${admin_chat_id}:${action_name}`;
@@ -60,10 +68,22 @@ const file_name_timestamp = () => {
 
 const normalize_phone_digits = (value = "") => String(value).replace(/\D/g, "");
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const is_forwarded_message = (raw_message = {}) => {
+  return Boolean(
+    raw_message?.forward_from ||
+      raw_message?.forward_from_chat ||
+      raw_message?.forward_origin ||
+      raw_message?.forward_date,
+  );
+};
+
 const admin_actions = async ({
   user,
   text: message,
   chat: { id: chat_id },
+  raw_message,
 }) => {
   const user_state = user?.state;
   const t = (text) => texts[text]["uz"];
@@ -89,6 +109,10 @@ const admin_actions = async ({
     update_state_name(null);
     return await user.save();
   };
+
+  if (check_state_name("broadcast_sending")) {
+    return send_message(chat_id, t("broadcast_in_progress"), k("home"));
+  }
 
   if (check_command("/start", message)) {
     // Clear user state name
@@ -120,6 +144,119 @@ const admin_actions = async ({
       )}*\n\n*💸 Narxlash bo'yicha:*\n${click_stats}\n\n*👥 Jami foydalanuvchilar:* ${statistics.users?.toLocaleString()}\n\n*📞 Ro'yxatdan o'tgan foydalanuvchilar:* ${statistics.registered_users?.toLocaleString()}`,
       k("home"),
     );
+  }
+
+  if (check_command(t("broadcast_send"), message)) {
+    if (broadcast_lock.in_progress) {
+      return send_message(chat_id, t("broadcast_busy"), k("home"));
+    }
+
+    if (user_state?.name) {
+      await clearState();
+    }
+
+    update_state_name("broadcast_wait_forward");
+    await user.save();
+    return send_message(chat_id, t("broadcast_enter_forward"), k("back_to_home"));
+  }
+
+  if (check_state_name("broadcast_wait_forward")) {
+    if (broadcast_lock.in_progress) {
+      return send_message(chat_id, t("broadcast_busy"), k("home"));
+    }
+
+    const is_forward = is_forwarded_message(raw_message);
+    const source_chat_id = raw_message?.chat?.id;
+    const source_message_id = raw_message?.message_id;
+
+    if (
+      !is_forward ||
+      !Number.isInteger(source_chat_id) ||
+      !Number.isInteger(source_message_id)
+    ) {
+      return send_message(chat_id, t("broadcast_invalid_forward"), k("back_to_home"));
+    }
+
+    update_state_name("broadcast_sending");
+    await user.save();
+
+    const started_at = Date.now();
+    let total = 0;
+    let success = 0;
+    let error = 0;
+    let skipped = 0;
+
+    broadcast_lock.in_progress = true;
+    broadcast_lock.started_by = chat_id;
+    broadcast_lock.started_at = started_at;
+
+    try {
+      const users = await User.find({}, { chat_id: 1, _id: 0 }).lean();
+      const chat_ids = [...new Set(users.map((item) => item?.chat_id))].filter(
+        (id) => Number.isInteger(id),
+      );
+
+      total = chat_ids.length;
+      broadcast_lock.total_users = total;
+
+      await send_message(
+        chat_id,
+        `${t("broadcast_in_progress")}\n\n*Jami foydalanuvchilar:* ${total}`,
+        k("home"),
+      );
+
+      for (let index = 0; index < chat_ids.length; index++) {
+        const target_chat_id = chat_ids[index];
+
+        if (!Number.isInteger(target_chat_id)) {
+          skipped += 1;
+          continue;
+        }
+
+        try {
+          await bot.copyMessage(
+            target_chat_id,
+            source_chat_id,
+            source_message_id,
+          );
+          success += 1;
+        } catch (forward_error) {
+          error += 1;
+          const description =
+            forward_error?.response?.body?.description ||
+            forward_error?.message ||
+            "Noma'lum xatolik";
+          console.log(
+            "Forward yuborilmadi. Foydalanuvchi:",
+            target_chat_id,
+            "Sabab:",
+            description,
+          );
+        }
+
+        if (index < chat_ids.length - 1) {
+          await sleep(BROADCAST_SLEEP_MS);
+        }
+      }
+    } catch (broadcast_error) {
+      console.error("Broadcast process error:", broadcast_error?.message || broadcast_error);
+    } finally {
+      const duration_seconds = Math.ceil((Date.now() - started_at) / 1000);
+      broadcast_lock.in_progress = false;
+      broadcast_lock.started_by = null;
+      broadcast_lock.started_at = null;
+      broadcast_lock.total_users = 0;
+
+      await clearState();
+
+      await send_message(
+        chat_id,
+        `*${t("broadcast_complete")}*\n\n*Jami:* ${total}\n*Success:* ${success}\n*Error:* ${error}\n*Skipped:* ${skipped}\n*Davomiyligi:* ${duration_seconds} soniya`,
+        k("home"),
+      );
+    }
+
+    return;
   }
 
   if (check_command(t("export_users_excel"), message)) {

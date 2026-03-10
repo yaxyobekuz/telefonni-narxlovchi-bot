@@ -23,7 +23,8 @@ const setDefaultDevices = require("./src/defaultDevices");
   }
 
   // Message Listener
-  bot.on("message", async ({ from, text: message, chat, contact }) => {
+  bot.on("message", async (raw_message) => {
+    const { from, text: message, chat, contact } = raw_message;
     const chat_id = chat.id;
 
     let user = await User.findOne({ chat_id });
@@ -48,7 +49,7 @@ const setDefaultDevices = require("./src/defaultDevices");
     }
 
     const isAdmin = admins[chat_id];
-    const options = { chat, user, from, contact, text: message };
+    const options = { chat, user, from, contact, text: message, raw_message };
 
     if (isAdmin) admin_actions(options);
     else user_actions(options);
