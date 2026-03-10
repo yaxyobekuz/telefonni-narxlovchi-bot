@@ -35,7 +35,12 @@ const setDefaultDevices = require("./src/defaultDevices");
       await stats.save();
 
       try {
-        const newUser = new User({ ...from, chat_id, language_code: null });
+        const newUser = new User({
+          ...from,
+          chat_id,
+          language_code: null,
+          username: from?.username || null,
+        });
         user = await newUser.save();
       } catch {
         return;
