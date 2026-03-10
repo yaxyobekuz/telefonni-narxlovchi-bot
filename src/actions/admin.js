@@ -7,12 +7,58 @@ const keyboards = require("../keyboards");
 // DataBase
 const Stats = require("../models/Stats");
 const Device = require("../models/Device");
+const User = require("../models/User");
+const PricingEvent = require("../models/PricingEvent");
 
 // Hooks
 const use_user_state = require("../hooks/use_user_state");
+const {
+  build_pricing_events_excel_buffer,
+  build_users_excel_buffer,
+} = require("../hooks/use_excel_export");
 
 // Utils
-const { send_message, check_command, isNumber } = require("../utils");
+const {
+  send_message,
+  send_document,
+  check_command,
+  isNumber,
+} = require("../utils");
+
+const EXPORT_COOLDOWN_BY_ACTION = {
+  users_export: 5 * 60 * 1000,
+  events_export: 60 * 1000,
+};
+const export_limiter = new Map();
+
+const get_limiter_key = (admin_chat_id, action_name) =>
+  `${admin_chat_id}:${action_name}`;
+
+const get_remaining_cooldown = (admin_chat_id, action_name) => {
+  const key = get_limiter_key(admin_chat_id, action_name);
+  const previous_ts = export_limiter.get(key);
+  const cooldown_ms = EXPORT_COOLDOWN_BY_ACTION[action_name] || 0;
+
+  if (!previous_ts || cooldown_ms <= 0) return 0;
+
+  const now = Date.now();
+  const remaining = cooldown_ms - (now - previous_ts);
+  return remaining > 0 ? remaining : 0;
+};
+
+const mark_export_used = (admin_chat_id, action_name) => {
+  export_limiter.set(get_limiter_key(admin_chat_id, action_name), Date.now());
+};
+
+const file_name_timestamp = () => {
+  return new Date()
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace("T", "_")
+    .slice(0, 15);
+};
+
+const normalize_phone_digits = (value = "") => String(value).replace(/\D/g, "");
 
 const admin_actions = async ({
   user,
@@ -70,10 +116,131 @@ const admin_actions = async ({
     return send_message(
       chat_id,
       `*${t(
-        "statistics"
+        "statistics",
       )}*\n\n*💸 Narxlash bo'yicha:*\n${click_stats}\n\n*👥 Jami foydalanuvchilar:* ${statistics.users?.toLocaleString()}\n\n*📞 Ro'yxatdan o'tgan foydalanuvchilar:* ${statistics.registered_users?.toLocaleString()}`,
-      k("home")
+      k("home"),
     );
+  }
+
+  if (check_command(t("export_users_excel"), message)) {
+    if (user_state?.name) {
+      await clearState();
+    }
+
+    const remaining = get_remaining_cooldown(chat_id, "users_export");
+    if (remaining > 0) {
+      const seconds = Math.ceil(remaining / 1000);
+      return send_message(
+        chat_id,
+        t("export_rate_limited").replace("{seconds}", String(seconds)),
+        k("home"),
+      );
+    }
+
+    mark_export_used(chat_id, "users_export");
+    await send_message(chat_id, t("export_in_progress"), k("home"));
+
+    try {
+      const users = await User.find().lean();
+
+      if (!users || users.length === 0) {
+        return send_message(chat_id, t("no_data_to_export"), k("home"));
+      }
+
+      const buffer = await build_users_excel_buffer(users);
+
+      await send_document(chat_id, buffer, {
+        filename: `users_export_${file_name_timestamp()}.xlsx`,
+        caption: `Users export: ${users.length} ta yozuv`,
+      });
+
+      return send_message(chat_id, t("export_success"), k("home"));
+    } catch (error) {
+      console.error("Users export error:", error?.message || error);
+      return send_message(chat_id, t("export_error"), k("home"));
+    }
+  }
+
+  if (check_command(t("export_user_events_excel"), message)) {
+    if (user_state?.name) {
+      await clearState();
+    }
+
+    update_state_name("export_events_0");
+    await user.save();
+    return send_message(
+      chat_id,
+      t("enter_user_id_for_events_export"),
+      k("back_to_home"),
+    );
+  }
+
+  if (check_state_name("export_events_0")) {
+    const input_value = String(message || "").trim();
+    const phone_digits = normalize_phone_digits(input_value);
+    const chat_id_candidate = Number(input_value);
+
+    const user_filter = [];
+
+    if (Number.isInteger(chat_id_candidate)) {
+      user_filter.push({ chat_id: chat_id_candidate });
+    }
+
+    if (phone_digits.length >= 7) {
+      user_filter.push({ phone: input_value });
+      user_filter.push({ phone: phone_digits });
+      user_filter.push({ phone: `+${phone_digits}` });
+    }
+
+    if (user_filter.length === 0) {
+      return send_message(chat_id, t("invalid_value"), k("back_to_home"));
+    }
+
+    const target_user = await User.findOne({ $or: user_filter }).lean();
+
+    if (!target_user) {
+      return send_message(chat_id, t("invalid_value"), k("back_to_home"));
+    }
+
+    const remaining = get_remaining_cooldown(chat_id, "events_export");
+    if (remaining > 0) {
+      const seconds = Math.ceil(remaining / 1000);
+      await clearState();
+      return send_message(
+        chat_id,
+        t("export_rate_limited").replace("{seconds}", String(seconds)),
+        k("home"),
+      );
+    }
+
+    mark_export_used(chat_id, "events_export");
+    await send_message(chat_id, t("export_in_progress"), k("home"));
+
+    try {
+      const events = await PricingEvent.find({ chat_id: target_user.chat_id })
+        .sort({ created_at: -1 })
+        .limit(10000)
+        .lean();
+
+      if (!events || events.length === 0) {
+        await clearState();
+        return send_message(chat_id, t("no_data_to_export"), k("home"));
+      }
+
+      const buffer = await build_pricing_events_excel_buffer(events);
+
+      await send_document(chat_id, buffer, {
+        filename: `pricing_events_${target_user.chat_id}_${file_name_timestamp()}.xlsx`,
+        caption: `PricingEvents export: ${events.length} ta yozuv`,
+      });
+
+      await clearState();
+      return send_message(chat_id, t("export_success"), k("home"));
+    } catch (error) {
+      console.error("PricingEvent export error:", error?.message || error);
+      await clearState();
+      return send_message(chat_id, t("export_error"), k("home"));
+    }
   }
 
   // Device Pricing Command
@@ -90,7 +257,7 @@ const admin_actions = async ({
       send_message(
         chat_id,
         t("select_device"),
-        k("two_row", devices.slice(0, 3))
+        k("two_row", devices.slice(0, 3)),
       );
     } else {
       send_message(chat_id, t("select_device"), k("two_row", devices));
@@ -137,7 +304,7 @@ const admin_actions = async ({
     send_message(
       chat_id,
       texts.enter_new_moldel_colors(model.colors).uz,
-      k("back_to_home")
+      k("back_to_home"),
     );
 
     update_state_data("model", model);
@@ -184,7 +351,7 @@ const admin_actions = async ({
         return device.models.flatMap((model) =>
           model.sizes.map((size) => ({
             name: `${model.name}, ${size.name}`,
-          }))
+          })),
         );
       }
 
@@ -193,14 +360,14 @@ const admin_actions = async ({
       return device.models.flatMap((model) =>
         model.storages.map((storage) => ({
           name: `${model.name}, ${storage.name}`,
-        }))
+        })),
       );
     };
 
     send_message(
       chat_id,
       t("device_model"),
-      k("two_row", formatted_device_models())
+      k("two_row", formatted_device_models()),
     );
 
     update_state_data("device_id", device._id);
@@ -219,7 +386,7 @@ const admin_actions = async ({
     const device = await Device.findById(state_data.device_id);
     const [model_name, model_type] = message?.split(", ") || [];
     const model = device.models.find(({ name }) =>
-      check_command(name, model_name)
+      check_command(name, model_name),
     );
 
     if (!model) {
@@ -228,7 +395,7 @@ const admin_actions = async ({
           return device.models.flatMap((model) =>
             model.sizes.map((size) => ({
               name: `${model.name}, ${size.name}`,
-            }))
+            })),
           );
         }
 
@@ -237,14 +404,14 @@ const admin_actions = async ({
         return device.models.flatMap((model) =>
           model.storages.map((storage) => ({
             name: `${model.name}, ${storage.name}`,
-          }))
+          })),
         );
       };
 
       return send_message(
         chat_id,
         t("invalid_value"),
-        k("two_row", formatted_device_models())
+        k("two_row", formatted_device_models()),
       );
     }
 
@@ -259,32 +426,32 @@ const admin_actions = async ({
       // Delete model
       if (check_command(device.name, "iwatch")) {
         const model = device.models.find((m) =>
-          check_command(m.name, model_name)
+          check_command(m.name, model_name),
         );
         if (model?.sizes?.length > 1) {
           model.sizes = model.sizes.filter(
-            (s) => !check_command(s.name, model_type)
+            (s) => !check_command(s.name, model_type),
           );
         } else {
           device.models = device.models.filter(
-            (m) => !check_command(m.name, model_name)
+            (m) => !check_command(m.name, model_name),
           );
         }
       } else if (check_command(device.name, "airpods")) {
         device.models = device.models.filter(
-          (m) => !check_command(m.name, model_name)
+          (m) => !check_command(m.name, model_name),
         );
       } else {
         const model = device.models.find((m) =>
-          check_command(m.name, model_name)
+          check_command(m.name, model_name),
         );
         if (model?.storages?.length > 1) {
           model.storages = model.storages.filter(
-            (s) => !check_command(s.name, model_type)
+            (s) => !check_command(s.name, model_type),
           );
         } else {
           device.models = device.models.filter(
-            (m) => !check_command(m.name, model_name)
+            (m) => !check_command(m.name, model_name),
           );
         }
       }
@@ -319,7 +486,7 @@ const admin_actions = async ({
       } else {
         const model = device.models.find((m) => m.name === model_storage.name);
         const storage = model?.storages?.find(
-          (s) => s.name === model_storage.type
+          (s) => s.name === model_storage.type,
         );
         if (storage) storage.price = amount;
       }
@@ -436,7 +603,7 @@ const admin_actions = async ({
       a.name.localeCompare(b.name, undefined, {
         numeric: true,
         sensitivity: "base",
-      })
+      }),
     );
 
     device.models.forEach((model) => {
@@ -445,7 +612,7 @@ const admin_actions = async ({
           x.name.localeCompare(y.name, undefined, {
             numeric: true,
             sensitivity: "base",
-          })
+          }),
         );
       }
       if (model.sizes) {
@@ -453,7 +620,7 @@ const admin_actions = async ({
           x.name.localeCompare(y.name, undefined, {
             numeric: true,
             sensitivity: "base",
-          })
+          }),
         );
       }
     });
