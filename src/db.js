@@ -1,6 +1,11 @@
 const admins = {
   201488968: { id: 201488968, name: "Abushakhin (Ega)", status: "owner" },
   298444246: { id: 298444246, name: "Developer Admin", status: "admin" },
+  7734424535: {
+    id: 7734424535,
+    status: "admin",
+    name: "Abdurakhmon Kholikjonov",
+  },
 };
 
 const languages = [
@@ -10,6 +15,6 @@ const languages = [
   { value: "en", name: "English 🇬🇧" },
 ];
 
-const mandatory_channels = [{ username: "@macbrouz", chat_id: -1001330303317 }];
+const mandatory_channels = [];
 
 module.exports = { admins, languages, mandatory_channels };
